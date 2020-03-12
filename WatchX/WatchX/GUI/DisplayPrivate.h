@@ -28,6 +28,10 @@ typedef enum
     PAGE_Home,
     PAGE_Settings,
     PAGE_TimeCfg,
+    PAGE_Brightness,
+    PAGE_StopWatch,
+    PAGE_Altitude,
+    PAGE_About,
     /*±£¡Ù*/
     PAGE_MAX
 } Page_Type;
@@ -42,6 +46,9 @@ while(!(condition)){\
 /*LittleVGL*/
 #include "lvgl/lvgl.h"
 
+#define LV_ANIM_TIME_DEFAULT 200
+#define LV_SYMBOL_DEGREE_SIGN   "\xC2\xB0"
+
 void lv_port_disp_init();
 bool lv_obj_del_safe(lv_obj_t** obj);
 void lv_label_set_text_add(lv_obj_t * label, const char * text);
@@ -54,11 +61,10 @@ void lv_obj_add_anim(
     lv_obj_t * obj, lv_anim_t * a,
     lv_anim_exec_xcb_t exec_cb, 
     int32_t start, int32_t end,
-    uint16_t time = 200,
+    uint16_t time = LV_ANIM_TIME_DEFAULT,
     lv_anim_ready_cb_t ready_cb = NULL,
     lv_anim_path_cb_t path_cb = lv_anim_path_ease_in_out
 );
-bool lv_anim_is_end(lv_anim_t * a);
 
 /*AppWindow*/
 void Creat_AppWindow();

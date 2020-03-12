@@ -84,21 +84,3 @@ void lv_obj_add_anim(
     a->time = time;
     lv_anim_create(a);
 }
-
-bool lv_anim_is_end(lv_anim_t * a)
-{
-    if(!(a->act_time >= a->time))
-    {
-        return false;
-    }
-    
-    /* animation if
-     * - no repeat and no play back (simple one shot animation)
-     * - no repeat, play back is enabled and play back is ready */
-    if(!((a->repeat == 0 && a->playback == 0) || (a->repeat == 0 && a->playback == 1 && a->playback_now == 1)))
-    {
-        return false;
-    }
-    
-    return true;
-}

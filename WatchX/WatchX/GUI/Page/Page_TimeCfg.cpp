@@ -117,9 +117,6 @@ static void Creat_ContTimeDate()
     style_cont.body.border.width = 1;
     style_cont.body.border.color = LV_COLOR_RED;
     style_cont.body.radius = 10;
-//    style_cont.body.shadow.type = LV_SHADOW_BOTTOM;
-//    style_cont.body.shadow.color = LV_COLOR_WHITE;
-//    style_cont.body.shadow.width = 10;
     lv_cont_set_style(contTime, LV_CONT_STYLE_MAIN, &style_cont);
     lv_cont_set_style(contDate, LV_CONT_STYLE_MAIN, &style_cont);
 }
@@ -270,27 +267,37 @@ static void TimeConfigValueUpdate(int8_t dir = 0)
 
 static void ContAnimMove(bool down)
 {
+    int step = down ? 0 : 1;
     static lv_anim_t a1, a2;
 
-    lv_obj_add_anim(
-        contTimeAnim, &a1,
-        (lv_anim_exec_xcb_t)lv_obj_set_y,
-        lv_obj_get_y(contTimeAnim),
-        down ? lv_obj_get_height(contTime) : 0,
-        200
-    );
-    
-    PageDelay(200);
-    
-    lv_obj_add_anim(
-        contDateAnim, &a2,
-        (lv_anim_exec_xcb_t)lv_obj_set_y,
-        lv_obj_get_y(contDateAnim),
-        down ? lv_obj_get_height(contDate) : 0,
-        200
-    );
-
-    PageDelay(200);
+    int cnt = 2;
+    while(cnt--)
+    {
+        switch(step)
+        {
+            case 0:
+                lv_obj_add_anim(
+                    contTimeAnim, &a1,
+                    (lv_anim_exec_xcb_t)lv_obj_set_y,
+                    lv_obj_get_y(contTimeAnim),
+                    down ? lv_obj_get_height(contTime) : 0,
+                    200
+                );
+                step = 1;
+                break;
+            case 1:
+                lv_obj_add_anim(
+                    contDateAnim, &a2,
+                    (lv_anim_exec_xcb_t)lv_obj_set_y,
+                    lv_obj_get_y(contDateAnim),
+                    down ? lv_obj_get_height(contDate) : 0,
+                    200
+                );
+                step = 0;
+                break;
+        }
+        PageDelay(200);
+    }
 }
 
 static void Creat_ContAnim()

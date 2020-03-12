@@ -12,11 +12,15 @@ do{\
     PageRegister_##name(PAGE_##name);\
 }while(0)
 
-static void Init_Pages()
+static void Pages_Init()
 {
     PAGE_REG(Home);
     PAGE_REG(Settings);
     PAGE_REG(TimeCfg);
+    PAGE_REG(Brightness);
+    PAGE_REG(StopWatch);
+    PAGE_REG(Altitude);
+    PAGE_REG(About);
     
     page.PagePush(PAGE_Home);
 }
@@ -35,9 +39,9 @@ void Display_Init()
     lv_theme_set_current(lv_theme_night_init(200, NULL));
     
     Creat_AppWindow();
-    Init_Pages();
+    Pages_Init();
     
-    Brightness_SetGradual(1000);
+    Brightness_SetGradual(800);
 }
 
 void Task_Display()

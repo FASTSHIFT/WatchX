@@ -12,7 +12,6 @@ static lv_obj_t * contICON;
 LV_IMG_DECLARE(ImgStopWatch);
 LV_IMG_DECLARE(ImgMountain);
 LV_IMG_DECLARE(ImgLight);
-LV_IMG_DECLARE(ImgButterfly);
 LV_IMG_DECLARE(ImgTimeCfg);
 LV_IMG_DECLARE(ImgInfo);
 
@@ -25,12 +24,11 @@ typedef struct{
 
 ICON_TypeDef ICON_Grp[] = 
 {
-    {.src_img = &ImgStopWatch, .text = "StopWatch"},
-    {.src_img = &ImgMountain,  .text = "Altitude"},
-    {.src_img = &ImgLight,     .text = "Light"},
-    {.src_img = &ImgButterfly, .text = "Theme"},
-    {.src_img = &ImgTimeCfg,   .text = "TimeCfg", .pageID = PAGE_TimeCfg},
-    {.src_img = &ImgInfo,      .text = "About"}
+    {.src_img = &ImgStopWatch, .text = "StopWatch",  .pageID = PAGE_StopWatch},
+    {.src_img = &ImgMountain,  .text = "Altitude",   .pageID = PAGE_Altitude},
+    {.src_img = &ImgLight,     .text = "Brightness", .pageID = PAGE_Brightness},
+    {.src_img = &ImgTimeCfg,   .text = "TimeCfg",    .pageID = PAGE_TimeCfg},
+    {.src_img = &ImgInfo,      .text = "About",      .pageID = PAGE_About}
 };
 
 static const uint8_t ICON_IntervalPixel = 20;

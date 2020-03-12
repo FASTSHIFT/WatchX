@@ -31,7 +31,7 @@ static void Creat_ImgBg(void)
 static void Task_TopBarUpdate(lv_task_t * task)
 {
     Task_BMP_Update();
-    lv_label_set_text_fmt(labelBMP, "% 2dC %dm", (int)BMP180.temperature, (int)BMP180.altitude);
+    lv_label_set_text_fmt(labelBMP, "% 2dC"LV_SYMBOL_DEGREE_SIGN" %dm", (int)BMP180.temperature, (int)BMP180.altitude);
     
     float battVoltage = 3.7;//(float)analogRead_DMA(BAT_DET_Pin) / 4095.0f * 3.3f * 2;
     bool Is_BattCharging = digitalRead(BAT_CHG_Pin);
@@ -194,9 +194,9 @@ static void Loop()
   */
 static void Exit()
 {
-    lv_obj_clean(appWindow);
     lv_task_del(taskTimeUpdate);
     lv_task_del(taskTopBarUpdate);
+    lv_obj_clean(appWindow);
 }
 
 /**
@@ -207,7 +207,7 @@ static void Exit()
   */
 static void Event(int event, void* btn)
 {
-    if(event == ButtonEvent_Type::EVENT_ButtonClick)
+    if(event == ButtonEvent_Type::EVENT_ButtonClick || event == ButtonEvent_Type::EVENT_ButtonLongPressed)
     {
         page.PagePush(PAGE_Settings);
     }

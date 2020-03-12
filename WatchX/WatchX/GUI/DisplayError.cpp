@@ -16,28 +16,29 @@ static void System_CrashReports(const char* report)
     screen.fillScreen(screen.Blue);
     screen.setTextColor(screen.White);
     screen.setFont(&FreeMono12pt7b);
-    screen.setTextSize(1);
-    screen.setCursor(0, 17);
-    screen.println(":(");
+    screen.setTextSize(2);
+    screen.setCursor(0, 34);
+    screen.print(":(");
 
     screen.setFont();
 
+    screen.setTextSize(1);
     screen.setCursor(0, ScreenMid_H - TEXT_HEIGHT_1 - 5);
     screen.println(report);
-    screen.print("Syetem will reboot...");
+    screen.print("Press 'OK' to reboot..");
 
-    screen.setCursor(0, screen.height() - TEXT_HEIGHT_1  * 6);
+    screen.setCursor(0, screen.height() - TEXT_HEIGHT_1 * 6);
     screen.println("Error code:");
-    screen.printf("MMFAR=0x%x\r\n", SCB->MMFAR);
-    screen.printf("BFAR=0x%x\r\n", SCB->BFAR);
-    screen.printf("CFSR=0x%x\r\n", SCB->CFSR);
-    screen.printf("HFSR=0x%x\r\n", SCB->HFSR);
-    screen.printf("DFSR=0x%x\r\n", SCB->DFSR);
+    screen.printf("MMFAR = 0x%08X\r\n", SCB->MMFAR);
+    screen.printf("BFAR  = 0x%08X\r\n", SCB->BFAR);
+    screen.printf("CFSR  = 0x%08X\r\n", SCB->CFSR);
+    screen.printf("HFSR  = 0x%08X\r\n", SCB->HFSR);
+    screen.printf("DFSR  = 0x%08X\r\n", SCB->DFSR);
 }
 
 void DisplayError_Init()
 {
-    cm_backtrace_init("WatchX", "v2.0", __DATE__);
+    cm_backtrace_init(WX_NAME, WX_HARDWARE_VERSION, WX_SOFTWARE_VERSION" "__DATE__);
     
     screen.setTextWrap(true);
     screen.setTextSize(1);

@@ -1,8 +1,12 @@
 #ifndef __SYSCONFIG_H
 #define __SYSCONFIG_H
 
-#define TFT_CS_Pin PA4
-#define TFT_DC_Pin PA8
+#define WX_NAME             "WatchX"
+#define WX_HARDWARE_VERSION "v2.0"
+#define WX_SOFTWARE_VERSION "v0.3"
+
+#define TFT_CS_Pin  PA4
+#define TFT_DC_Pin  PA8
 #define TFT_RST_Pin PA1 
 #define TFT_LED_Pin PA10
 
@@ -21,5 +25,7 @@
 
 #define BMP_SCL_Pin PB8
 #define BMP_SDA_Pin PB9
+
+#define STOPWATCH_TIM TIM2
 
 #endif

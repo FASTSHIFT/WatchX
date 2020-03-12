@@ -32,6 +32,23 @@ static void Exit()
   */
 static void Event(int event, void* btn)
 {
+    if(btn == &btOK)
+    {
+        if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+        {
+            page.PagePop();
+        }
+    }
+    
+    if(event == ButtonEvent_Type::EVENT_ButtonPress || event == ButtonEvent_Type::EVENT_ButtonLongPressRepeat)
+    {
+        if(btn == &btUP)
+        {
+        }
+        if(btn == &btDOWN)
+        {
+        }
+    }
 }
 
 /**
