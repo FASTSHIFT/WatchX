@@ -65,6 +65,17 @@ void lv_obj_add_anim(
     lv_anim_ready_cb_t ready_cb = NULL,
     lv_anim_path_cb_t path_cb = lv_anim_path_ease_in_out
 );
+#define LV_OBJ_ADD_ANIM(obj,attr,target,time)\
+do{\
+    static lv_anim_t a;\
+    lv_obj_add_anim(\
+        (obj), &a,\
+        (lv_anim_exec_xcb_t)lv_obj_set_##attr,\
+        lv_obj_get_##attr(obj),\
+        (target),\
+        (time)\
+    );\
+}while(0)
 
 /*AppWindow*/
 void Creat_AppWindow();

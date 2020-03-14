@@ -89,64 +89,54 @@ static void PageAnimOpen(bool open)
     
     int cnt = 5;
     
-    static lv_anim_t a1, a2, a3, a4;
+    lv_opa_t opa_target = open ? LV_OPA_COVER : LV_OPA_TRANSP;
 
     while(cnt--)
     {
         switch(step)
         {
             case 0:
-                lv_obj_add_anim(
-                    imgLogo, &a1,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(imgLogo),
-                    open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    200
+                LV_OBJ_ADD_ANIM(
+                    imgLogo, opa_scale,
+                    opa_target,
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = 1;
                 break;
             case 1:
-                lv_obj_add_anim(
-                    labelDesigner, &a2,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(labelDesigner),
-                    open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    200
+                LV_OBJ_ADD_ANIM(
+                    labelDesigner, opa_scale,
+                    opa_target,
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = open ? 2 : 0;
                 break;
             case 2:
-                lv_obj_add_anim(
-                    imgProg, &a2,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(imgProg),
-                    open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    200
+                LV_OBJ_ADD_ANIM(
+                    imgProg, opa_scale,
+                    opa_target,
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = open ? 3 : 1;
                 break;
             case 3:
-                lv_obj_add_anim(
-                    imgArt, &a3,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(imgArt),
-                    open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    200
+                LV_OBJ_ADD_ANIM(
+                    imgArt, opa_scale,
+                    opa_target,
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = open ? 4 : 2;
                 break;
              case 4:
-                lv_obj_add_anim(
-                    labelFwInfo, &a4,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(labelFwInfo),
-                    open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    200
+                LV_OBJ_ADD_ANIM(
+                    labelFwInfo, opa_scale,
+                    opa_target,
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = 3;
                 break;
         }
-        PageDelay(300);
+        PageDelay(LV_ANIM_TIME_DEFAULT + 100);
     }
 }
 

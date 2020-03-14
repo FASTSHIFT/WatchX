@@ -11,8 +11,6 @@ static void setup()
     pinMode(BAT_CHG_Pin, INPUT);
     
     RTCx_Init();
-//    RTCx_SetTime(8, 50, 00, RTC_H12_PM);
-//    RTCx_SetDate(20,3,10,2);
     Display_Init();
     
     digitalWrite(LED_Pin, LOW);

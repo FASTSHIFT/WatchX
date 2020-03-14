@@ -121,22 +121,15 @@ static void BrightAnim(bool open)
         {
             case 0:
                 targetAngle = open ? map(Brightness_GetValue(), BrightMinVal, 1000, 0, 359) : 0;
-                BrightArcSetVal(targetAngle, 300);
+                BrightArcSetVal(targetAngle, LV_ANIM_TIME_DEFAULT);
                 step = 1;
                 break;
             case 1:
-                static lv_anim_t a;
-                lv_obj_add_anim(
-                    labelBright, &a,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(labelBright),
-                    open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    300
-                );
+                LV_OBJ_ADD_ANIM(labelBright, opa_scale, open ? LV_OPA_COVER : LV_OPA_TRANSP, LV_ANIM_TIME_DEFAULT);
                 step = 0;
                 break;
         }
-        PageDelay(400);
+        PageDelay(LV_ANIM_TIME_DEFAULT + 100);
     }
 }
 

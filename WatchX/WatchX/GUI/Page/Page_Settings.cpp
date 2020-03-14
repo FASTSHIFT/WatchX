@@ -111,13 +111,7 @@ static void ICON_Grp_MoveFouce(uint8_t iconIndex)
     
     int16_t target_y = -(ICON_Size + ICON_IntervalPixel) * (iconIndex - 1);
 
-    static lv_anim_t a;
-    lv_obj_add_anim(
-        contICON, &a,
-        (lv_anim_exec_xcb_t)lv_obj_set_y,
-        lv_obj_get_y(contICON),
-        target_y
-    );
+    LV_OBJ_ADD_ANIM(contICON, y, target_y, LV_ANIM_TIME_DEFAULT);
 }
 
 static void ICON_Grp_Move(int8_t dir)
@@ -162,14 +156,8 @@ static void Setup()
   */
 static void Exit()
 {
-    static lv_anim_t a;
-    lv_obj_add_anim(
-        contICON, &a,
-        (lv_anim_exec_xcb_t)lv_obj_set_y,
-        lv_obj_get_y(contICON),
-        lv_obj_get_height(contDisp) + ICON_Size
-    );
-    PageDelay(200);
+    LV_OBJ_ADD_ANIM(contICON, y, lv_obj_get_height(contDisp) + ICON_Size, LV_ANIM_TIME_DEFAULT);
+    PageDelay(LV_ANIM_TIME_DEFAULT);
     lv_obj_clean(appWindow);
 }
 

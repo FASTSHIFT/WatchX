@@ -139,7 +139,7 @@ static void Creat_ChartAlt()
     lv_chart_set_series_opa(chartAlt, LV_OPA_70);
     lv_chart_set_series_width(chartAlt, 1);
     lv_chart_set_series_darking(chartAlt, LV_OPA_50);
-    lv_chart_set_div_line_count(chartAlt, 5, 3);
+    lv_chart_set_div_line_count(chartAlt, 4, 3);
     lv_chart_set_range(chartAlt, 0, 100);
     lv_chart_set_point_count(chartAlt, lv_obj_get_width(chartAlt));
     lv_chart_set_margin(chartAlt, 50);
@@ -169,36 +169,28 @@ static void PageAnimOpen(bool open)
         switch(step)
         {
             case 0:
-                static lv_anim_t a;
-                lv_obj_add_anim(
-                    contKPaTemp, &a,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(contKPaTemp),
+                LV_OBJ_ADD_ANIM(
+                    contKPaTemp, opa_scale,
                     open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    200
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = 1;
                 break;
             case 1:
-                static lv_anim_t a1, a2;
-                lv_obj_add_anim(
-                    chartAlt, &a1,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(chartAlt),
+                LV_OBJ_ADD_ANIM(
+                    chartAlt, opa_scale,
                     open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    200
+                    LV_ANIM_TIME_DEFAULT
                 );
-                lv_obj_add_anim(
-                    labelAlt, &a2,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(labelAlt),
+                LV_OBJ_ADD_ANIM(
+                    labelAlt, opa_scale,
                     open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    200
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = 0;
                 break;
         }
-        PageDelay(300);
+        PageDelay(LV_ANIM_TIME_DEFAULT + 100);
     }
 }
 

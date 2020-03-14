@@ -268,7 +268,6 @@ static void TimeConfigValueUpdate(int8_t dir = 0)
 static void ContAnimMove(bool down)
 {
     int step = down ? 0 : 1;
-    static lv_anim_t a1, a2;
 
     int cnt = 2;
     while(cnt--)
@@ -276,27 +275,15 @@ static void ContAnimMove(bool down)
         switch(step)
         {
             case 0:
-                lv_obj_add_anim(
-                    contTimeAnim, &a1,
-                    (lv_anim_exec_xcb_t)lv_obj_set_y,
-                    lv_obj_get_y(contTimeAnim),
-                    down ? lv_obj_get_height(contTime) : 0,
-                    200
-                );
+                LV_OBJ_ADD_ANIM(contTimeAnim, y, down ? lv_obj_get_height(contTime) : 0, LV_ANIM_TIME_DEFAULT);
                 step = 1;
                 break;
             case 1:
-                lv_obj_add_anim(
-                    contDateAnim, &a2,
-                    (lv_anim_exec_xcb_t)lv_obj_set_y,
-                    lv_obj_get_y(contDateAnim),
-                    down ? lv_obj_get_height(contDate) : 0,
-                    200
-                );
+                LV_OBJ_ADD_ANIM(contDateAnim, y, down ? lv_obj_get_height(contDate) : 0, LV_ANIM_TIME_DEFAULT);
                 step = 0;
                 break;
         }
-        PageDelay(200);
+        PageDelay(LV_ANIM_TIME_DEFAULT);
     }
 }
 

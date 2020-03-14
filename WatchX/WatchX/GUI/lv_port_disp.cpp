@@ -1,11 +1,11 @@
 #include "GUI/DisplayPrivate.h"
 
 static lv_disp_buf_t disp_buf;
-static lv_color_t lv_disp_buf[LV_HOR_RES_MAX * 20];
+static lv_color_t lv_disp_buf[LV_HOR_RES_MAX * 40];
 
 #if LV_USE_LOG != 0
 /* Serial debugging */
-void my_print(lv_log_level_t level, const char * file, uint32_t line, const char * dsc)
+static void log_print(lv_log_level_t level, const char * file, uint32_t line, const char * dsc)
 {
     Serial.printf("%s@%d->%s\r\n", file, line, dsc);
     delay(100);
@@ -23,8 +23,8 @@ void lv_port_disp_init()
 {
     lv_init();
 
-#if USE_LV_LOG != 0
-    lv_log_register_print(my_print); /* register print function for debugging */
+#if LV_USE_LOG != 0
+    lv_log_register_print(log_print); /* register print function for debugging */
 #endif
 
     lv_disp_buf_init(&disp_buf, lv_disp_buf, NULL, sizeof(lv_disp_buf)/sizeof(lv_color_t));

@@ -132,6 +132,8 @@ static void Creat_ContRecord()
     style_cont.body.border.color = LV_COLOR_RED;
     style_cont.body.radius = 10;
     lv_cont_set_style(contRecord, LV_CONT_STYLE_MAIN, &style_cont);
+    lv_obj_set_opa_scale_enable(contRecord, true);
+    lv_obj_set_opa_scale(contRecord, LV_OPA_TRANSP);
 }
 
 static void Creat_LabelRecord()
@@ -159,7 +161,6 @@ static void Creat_LabelRecord()
 static void ContAnimOpen(bool open)
 {
     int step = open ? 0 : 1;
-    static lv_anim_t a1, a2;
 
     int cnt = 2;
     while(cnt--)
@@ -167,27 +168,28 @@ static void ContAnimOpen(bool open)
         switch(step)
         {
             case 0:
-                lv_obj_add_anim(
-                    contRecord, &a1,
-                    (lv_anim_exec_xcb_t)lv_obj_set_y,
-                    lv_obj_get_y(contRecord),
+                LV_OBJ_ADD_ANIM(
+                    contRecord, y, 
                     open ? lv_obj_get_y(lmeterSec) + lv_obj_get_height(lmeterSec) + 20 : lv_obj_get_height(appWindow) + 20,
-                    300
+                    LV_ANIM_TIME_DEFAULT
+                );
+                LV_OBJ_ADD_ANIM(
+                    contRecord, opa_scale,
+                    open ? LV_OPA_COVER : LV_OPA_TRANSP,
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = 1;
                 break;
             case 1:
-                lv_obj_add_anim(
-                    lmeterSec, &a2,
-                    (lv_anim_exec_xcb_t)lv_obj_set_opa_scale,
-                    lv_obj_get_opa_scale(lmeterSec),
+                LV_OBJ_ADD_ANIM(
+                    lmeterSec, opa_scale,
                     open ? LV_OPA_COVER : LV_OPA_TRANSP,
-                    300
+                    LV_ANIM_TIME_DEFAULT
                 );
                 step = 0;
                 break;
         }
-        PageDelay(300);
+        PageDelay(LV_ANIM_TIME_DEFAULT);
     }
 }
 
