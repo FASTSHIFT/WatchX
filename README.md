@@ -1,5 +1,5 @@
 # WatchX
-> 开源智能手表, 高质量流畅(60FPS+)的动画效果, 易于扩展的系统框架.
+> 开源智能手表, 高质量流畅(60FPS+)的动画效果, 易于扩展的系统框架..
 
 ## UI框架
 > [LittlevGL V6.1.2](https://github.com/littlevgl/lvgl)
