@@ -1,5 +1,4 @@
 #include "FileGroup.h"
-#include "BSP/BSP.h"
 
 static void setup()
 {
@@ -20,6 +19,7 @@ static void loop()
 {
     Task_Display();
     __IntervalExecute(Task_ButtonMonitor(), 10);
+    __IntervalExecute(Task_AutoPowerDown(), 100);
 }
 
 /**

@@ -21,6 +21,7 @@ static void Pages_Init()
     PAGE_REG(StopWatch);
     PAGE_REG(Altitude);
     PAGE_REG(About);
+    PAGE_REG(Game);
     
     page.PagePush(PAGE_Home);
 }
@@ -41,7 +42,7 @@ void Display_Init()
     Creat_AppWindow();
     Pages_Init();
     
-    Brightness_SetGradual(800);
+    Brightness_SetGradual(1000, 1000);
 }
 
 void Task_Display()

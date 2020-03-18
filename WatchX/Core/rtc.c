@@ -156,7 +156,7 @@ void RTCx_SetWakeUp(uint32_t wksel, uint16_t cnt)
   */
 void RTC_Alarm_IRQHandler(void)
 {
-    if(RTC_GetFlagStatus(RTC_FLAG_ALRAF) == SET) //ALARM A中断?
+    if(RTC_GetFlagStatus(RTC_FLAG_ALRAF) == SET) //ALARM A中断
     {
         RTC_ClearFlag(RTC_FLAG_ALRAF);//清除中断标志
     }
@@ -169,7 +169,7 @@ void RTC_Alarm_IRQHandler(void)
   */
 void RTC_WKUP_IRQHandler(void)
 {
-    if(RTC_GetFlagStatus(RTC_FLAG_WUTF) == SET) //WK_UP中断?
+    if(RTC_GetFlagStatus(RTC_FLAG_WUTF) == SET) //WK_UP中断
     {
         RTC_ClearFlag(RTC_FLAG_WUTF);   //清除中断标志
     }

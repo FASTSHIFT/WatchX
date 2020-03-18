@@ -8,6 +8,7 @@ ButtonEvent btDOWN;
 
 static void ButtonEvent_Handler(ButtonEvent* btn, int event)
 {
+    Power_HandleTimeUpdate();
     page.PageEventTransmit(event, btn);
 }
 

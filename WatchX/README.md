@@ -18,3 +18,7 @@
 ## [v0.4] - 2020-03-14
 * 1.添加LV_OBJ_ADD_ANIM，更简洁的动画绑定
 
+## [v0.5] - 2020-03-18
+* 1.添加低功耗模式
+* 2.添加Arduboy Game System
+* 3.添加游戏 "CHRI-BOCCHI CAT"

@@ -32,6 +32,7 @@ typedef enum
     PAGE_StopWatch,
     PAGE_Altitude,
     PAGE_About,
+    PAGE_Game,
     /*±£¡Ù*/
     PAGE_MAX
 } Page_Type;

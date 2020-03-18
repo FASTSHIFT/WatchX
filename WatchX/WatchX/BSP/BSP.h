@@ -19,4 +19,11 @@ extern ButtonEvent btUP;
 extern ButtonEvent btOK;
 extern ButtonEvent btDOWN;
 
+/*Power*/
+void Power_EnterLowPowerMode();
+void Power_HandleTimeUpdate();
+void Power_SetAutoLowPowerTimeout(int16_t ms);
+void Power_SetAutoLowPowerEnable(bool en);
+void Task_AutoPowerDown();
+
 #endif

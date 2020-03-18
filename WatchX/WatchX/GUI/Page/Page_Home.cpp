@@ -181,6 +181,8 @@ static void Setup()
     Creat_LabelTopBar();
     Creat_LabelTime();
     Creat_LabelStep();
+    
+    Power_SetAutoLowPowerEnable(true);
 }
 
 static void Loop()
@@ -197,6 +199,8 @@ static void Exit()
     lv_task_del(taskTimeUpdate);
     lv_task_del(taskTopBarUpdate);
     lv_obj_clean(appWindow);
+    
+    Power_SetAutoLowPowerEnable(false);
 }
 
 /**
