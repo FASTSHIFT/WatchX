@@ -105,6 +105,51 @@ static void Creat_LabelKPaTemp()
     lv_obj_set_auto_realign(labelTemp, true);
 }
 
+static void lv_chart_get_series_point_min_max(const lv_obj_t * chart, const lv_chart_series_t * series, lv_coord_t * ymin, lv_coord_t * ymax)
+{
+    uint16_t cnt = lv_chart_get_point_cnt(chart);
+    lv_coord_t min = series->points[0];
+    lv_coord_t max = series->points[0];
+    for(uint16_t i = 0; i < cnt; i++)
+    {
+        lv_coord_t val = series->points[i];
+        if(val < min)
+            min = val;
+        if(val > max)
+            max = val;
+    }
+    if(ymin != NULL)*ymin = min;
+    if(ymax != NULL)*ymax = max;
+}
+
+static void ChartAlt_AutoTickProcess(lv_coord_t ymin, lv_coord_t ymax)
+{
+    static char tick_texts[50];
+    lv_coord_t diff = ymax - ymin;
+    snprintf(
+        tick_texts, sizeof(tick_texts), 
+        "%d\n%d\n%d\n%d\n%d\n%d",
+        ymax,
+        int(ymin + diff * 0.8),
+        int(ymin + diff * 0.6),
+        int(ymin + diff * 0.4),
+        int(ymin + diff * 0.2),
+        ymin
+    );
+        
+    lv_chart_set_y_tick_texts(chartAlt, tick_texts, 2, LV_CHART_AXIS_DRAW_LAST_TICK);
+}
+
+static void ChartAlt_AutoRangeProcess()
+{
+    lv_coord_t min, max;
+    lv_chart_get_series_point_min_max(chartAlt, serAlt, &min, &max);
+    min /= 10;
+    max /= 10;
+    lv_chart_set_range(chartAlt, min * 10 - 10, max * 10 + 10);
+    ChartAlt_AutoTickProcess(min * 10 - 20, max * 10 + 30);
+}
+
 static void Task_ChartUpdate(lv_task_t * task)
 {
     Task_BMP_Update();
@@ -112,6 +157,7 @@ static void Task_ChartUpdate(lv_task_t * task)
     lv_label_set_text_fmt(labelTemp, "%0.1fC"LV_SYMBOL_DEGREE_SIGN, BMP180.temperature);
     lv_label_set_text_fmt(labelAlt, BMP180.altitude > 0.0f ? "%+0.1fm" : "%0.1fm", BMP180.altitude);
     lv_chart_set_next(chartAlt, serAlt, BMP180.altitude);
+    ChartAlt_AutoRangeProcess();
 }
 
 static void Creat_ChartAlt()
@@ -148,10 +194,11 @@ static void Creat_ChartAlt()
     lv_chart_set_y_tick_texts(chartAlt, "m\n" "80\n" "60\n" "40\n" "20\n" "0", 2, LV_CHART_AXIS_DRAW_LAST_TICK);
 
     serAlt = lv_chart_add_series(chartAlt, LV_COLOR_WHITE);
+    lv_chart_init_points(chartAlt, serAlt, 0);
     
     labelAlt = lv_label_create(appWindow, NULL);
     lv_label_set_style(labelAlt, LV_LABEL_STYLE_MAIN, &style_label_public);
-    lv_label_set_static_text(labelAlt, "0m");
+    lv_label_set_static_text(labelAlt, "-m");
     lv_obj_align(labelAlt, chartAlt, LV_ALIGN_OUT_BOTTOM_MID, -10, 10);
     lv_obj_set_auto_realign(labelAlt, true);
     lv_obj_set_opa_scale_enable(labelAlt, true);

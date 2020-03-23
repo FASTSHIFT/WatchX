@@ -956,6 +956,11 @@
               <FilePath>..\Libraries\MPU6050\MPU6050.cpp</FilePath>
             </File>
             <File>
+              <FileName>MillisTaskManager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Libraries\MillisTaskManager\MillisTaskManager.cpp</FilePath>
+            </File>
+            <File>
               <FileName>PageManager.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Libraries\PageManager\PageManager.cpp</FilePath>

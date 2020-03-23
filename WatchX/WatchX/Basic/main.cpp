@@ -1,4 +1,13 @@
 #include "FileGroup.h"
+#include "MillisTaskManager/MillisTaskManager.h"
+
+static MillisTaskManager mtmMain(5);
+float CPU_Usage;
+
+static void Task_CPU_UsageUpdate()
+{
+    CPU_Usage = mtmMain.GetCPU_Usage();
+}
 
 static void setup()
 {
@@ -13,13 +22,16 @@ static void setup()
     Display_Init();
     
     digitalWrite(LED_Pin, LOW);
+    
+    mtmMain.TaskRegister(0, Task_Display, 1);
+    mtmMain.TaskRegister(1, Task_ButtonMonitor, 10);
+    mtmMain.TaskRegister(2, Task_AutoPowerDown, 100);
+    mtmMain.TaskRegister(3, Task_CPU_UsageUpdate, 1000);
 }
 
 static void loop()
 {
-    Task_Display();
-    __IntervalExecute(Task_ButtonMonitor(), 10);
-    __IntervalExecute(Task_AutoPowerDown(), 100);
+    mtmMain.Running(millis());
 }
 
 /**

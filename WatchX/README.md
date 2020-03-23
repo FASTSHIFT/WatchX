@@ -22,3 +22,8 @@
 * 1.添加低功耗模式
 * 2.添加Arduboy Game System
 * 3.添加游戏 "CHRI-BOCCHI CAT"
+
+## [v0.6] - 2020-03-23
+* 1.海拔显示添加自动量程
+* 2.添加MillisTaskManager，可统计CPU占用率
+* 3.添加时间上下滑动特效

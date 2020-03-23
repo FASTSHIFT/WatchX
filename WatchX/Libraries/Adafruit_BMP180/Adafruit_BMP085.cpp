@@ -18,8 +18,10 @@
 #include "Adafruit_BMP085.h"
 #include "Wire.h"
 #include "math.h"
+#include "GUI/DisplayPrivate.h"
 
-#define BMP_WIRE WireBMP
+#define BMP_WIRE       WireBMP
+#define BMP_DELAY(ms)  PageDelay(ms)
 
 Adafruit_BMP085::Adafruit_BMP085() {
 }
@@ -75,7 +77,7 @@ int32_t Adafruit_BMP085::computeB5(int32_t UT) {
 
 uint16_t Adafruit_BMP085::readRawTemperature(void) {
   write8(BMP085_CONTROL, BMP085_READTEMPCMD);
-  delay(5);
+  BMP_DELAY(5);
 #if BMP085_DEBUG == 1
   Serial.print("Raw temp: "); Serial.println(read16(BMP085_TEMPDATA));
 #endif
@@ -88,13 +90,13 @@ uint32_t Adafruit_BMP085::readRawPressure(void) {
   write8(BMP085_CONTROL, BMP085_READPRESSURECMD + (oversampling << 6));
 
   if (oversampling == BMP085_ULTRALOWPOWER) 
-    delay(5);
+    BMP_DELAY(5);
   else if (oversampling == BMP085_STANDARD) 
-    delay(8);
+    BMP_DELAY(8);
   else if (oversampling == BMP085_HIGHRES) 
-    delay(14);
+    BMP_DELAY(14);
   else 
-    delay(26);
+    BMP_DELAY(26);
 
   raw = read16(BMP085_PRESSUREDATA);
 
