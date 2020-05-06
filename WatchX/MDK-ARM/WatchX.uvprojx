@@ -407,14 +407,14 @@
               <FilePath>..\WatchX\BSP\BSP.h</FilePath>
             </File>
             <File>
+              <FileName>BSP_Backlight.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\WatchX\BSP\BSP_Backlight.cpp</FilePath>
+            </File>
+            <File>
               <FileName>BSP_Buttons.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\WatchX\BSP\BSP_Buttons.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>BSP_Brightness.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\WatchX\BSP\BSP_Brightness.cpp</FilePath>
             </File>
             <File>
               <FileName>BSP_BMP.cpp</FileName>
@@ -1034,7 +1034,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>LittleVGL</GroupName>
+          <GroupName>LittlevGL</GroupName>
           <GroupOption>
             <CommonProperty>
               <UseCPPCompiler>0</UseCPPCompiler>

@@ -83,7 +83,6 @@ void Adafruit_ST7789::begin()
     if(hwSPI)
     {
         TFT_SPI.begin();
-        //TFT_SPI.setDataMode(SPI_MODE2);
         TFT_SPI.setClock(200000000);
     }
     else

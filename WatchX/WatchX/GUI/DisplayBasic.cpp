@@ -17,7 +17,7 @@ static void Pages_Init()
     PAGE_REG(Home);
     PAGE_REG(Settings);
     PAGE_REG(TimeCfg);
-    PAGE_REG(Brightness);
+    PAGE_REG(Backlight);
     PAGE_REG(StopWatch);
     PAGE_REG(Altitude);
     PAGE_REG(About);
@@ -28,7 +28,7 @@ static void Pages_Init()
 
 void Display_Init()
 {
-    Brightness_SetValue(0);
+    Backlight_SetValue(0);
     
     screen.begin();
     screen.setRotation(0);
@@ -42,7 +42,7 @@ void Display_Init()
     Creat_AppWindow();
     Pages_Init();
     
-    Brightness_SetGradual(1000, 1000);
+    Backlight_SetGradual(1000, 1000);
 }
 
 void Task_Display()

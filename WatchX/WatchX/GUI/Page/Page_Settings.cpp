@@ -27,7 +27,7 @@ ICON_TypeDef ICON_Grp[] =
 {
     {.src_img = &ImgStopWatch, .text = "StopWatch",  .pageID = PAGE_StopWatch},
     {.src_img = &ImgMountain,  .text = "Altitude",   .pageID = PAGE_Altitude},
-    {.src_img = &ImgLight,     .text = "Brightness", .pageID = PAGE_Brightness},
+    {.src_img = &ImgLight,     .text = "Backlight", .pageID = PAGE_Backlight},
     {.src_img = &ImgTimeCfg,   .text = "TimeCfg",    .pageID = PAGE_TimeCfg},
     {.src_img = &ImgButterfly, .text = "Game",       .pageID = PAGE_Game},
     {.src_img = &ImgInfo,      .text = "About",      .pageID = PAGE_About}

@@ -1,4 +1,5 @@
-# 更新日志
+# WatchX 更新日志
+> https://github.com/FASTSHIFT/WatchX
 
 ## [v0.1] - 2020-03-07
 * 1.框架搭建完成，UI基于littlevGL v6.1.2
@@ -27,3 +28,7 @@
 * 1.海拔显示添加自动量程
 * 2.添加MillisTaskManager，可统计CPU占用率
 * 3.添加时间上下滑动特效
+
+## [v0.7] - 2020-05-03
+* 1.屏幕使用DMA发送，配合lvgl乒乓缓冲，画面无撕裂
+* 2.Brightness更改为Backlight

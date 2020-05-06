@@ -28,7 +28,7 @@ typedef enum
     PAGE_Home,
     PAGE_Settings,
     PAGE_TimeCfg,
-    PAGE_Brightness,
+    PAGE_Backlight,
     PAGE_StopWatch,
     PAGE_Altitude,
     PAGE_About,

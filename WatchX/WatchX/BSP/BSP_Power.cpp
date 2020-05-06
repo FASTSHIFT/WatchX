@@ -87,7 +87,7 @@ void Task_AutoPowerDown()
     
     if(millis() - Power_LastHandleTime >= (Power_AutoLowPowerTimeout * 1000))
     {
-        Brightness_SetGradual(0, 500);
+        Backlight_SetGradual(0, 500);
         PageDelay(500);
         Power_EnterLowPowerMode();
     }

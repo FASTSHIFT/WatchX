@@ -39,10 +39,10 @@ static void BrightArcSetVal(int targetAngle, uint16_t anim_time = 500)
 
 static void BrightCtrl(int8_t dir)
 {
-    int16_t brightVal = Brightness_GetValue();
+    int16_t brightVal = Backlight_GetValue();
     brightVal += dir;
     __LimitValue(brightVal, BrightMinVal, 1000);
-    Brightness_SetValue(brightVal);
+    Backlight_SetValue(brightVal);
     lv_label_set_text_fmt(labelBright, "%d", map(brightVal, BrightMinVal, 1000, 0, 100));
     
     if(dir != 0)
@@ -120,7 +120,7 @@ static void BrightAnim(bool open)
         switch(step)
         {
             case 0:
-                targetAngle = open ? map(Brightness_GetValue(), BrightMinVal, 1000, 0, 359) : 0;
+                targetAngle = open ? map(Backlight_GetValue(), BrightMinVal, 1000, 0, 359) : 0;
                 BrightArcSetVal(targetAngle, 400);
                 step = 1;
                 break;
@@ -145,7 +145,7 @@ static void Setup()
     
     ArcNowAngle = 0;
     
-    Creat_Title("Brightness");
+    Creat_Title("Backlight");
     Creat_Bright();
 
     BrightCtrl(0);
@@ -198,7 +198,7 @@ static void Event(int event, void* btn)
   * @param  pageID:为此页面分配的ID号
   * @retval 无
   */
-void PageRegister_Brightness(uint8_t pageID)
+void PageRegister_Backlight(uint8_t pageID)
 {
     appWindow = AppWindow_GetCont(pageID);
     page.PageRegister(pageID, Setup, NULL, Exit, Event);

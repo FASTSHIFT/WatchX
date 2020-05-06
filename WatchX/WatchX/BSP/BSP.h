@@ -8,10 +8,10 @@
 #include "Adafruit_BMP180/Adafruit_BMP085.h"
 extern Adafruit_BMP085 BMP180;
 
-/*Brightness*/
-uint16_t Brightness_GetValue();
-void Brightness_SetValue(int16_t val);
-void Brightness_SetGradual(uint16_t target, uint16_t time = 500);
+/*Backlight*/
+uint16_t Backlight_GetValue();
+void Backlight_SetValue(int16_t val);
+void Backlight_SetGradual(uint16_t target, uint16_t time = 500);
 
 /*Buttons*/
 #include "ButtonEvent/ButtonEvent.h"

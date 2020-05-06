@@ -153,77 +153,37 @@
           <Name>-T0</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>220</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134256996</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\WatchX\Game\chribocchi\title.cpp</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WatchX\../WatchX/Game/chribocchi/title.cpp\220</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>225</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134257032</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\WatchX\Game\chribocchi\title.cpp</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WatchX\../WatchX/Game/chribocchi/title.cpp\225</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>230</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134257064</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\WatchX\Game\chribocchi\title.cpp</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WatchX\../WatchX/Game/chribocchi/title.cpp\230</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>19</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134261526</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\WatchX\Game\chribocchi\MyArduboy.cpp</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\WatchX\../WatchX/Game/chribocchi/MyArduboy.cpp\19</Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
           <ItemText>CPU_Usage</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>useTime,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>DMA2_Stream3,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>DMA2</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>lv_disp_buf1</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>lv_disp_buf2</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
@@ -346,8 +306,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\WatchX\BSP\BSP_Buttons.cpp</PathWithFileName>
-      <FilenameWithoutPath>BSP_Buttons.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\WatchX\BSP\BSP_Backlight.cpp</PathWithFileName>
+      <FilenameWithoutPath>BSP_Backlight.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -358,8 +318,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\WatchX\BSP\BSP_Brightness.cpp</PathWithFileName>
-      <FilenameWithoutPath>BSP_Brightness.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\WatchX\BSP\BSP_Buttons.cpp</PathWithFileName>
+      <FilenameWithoutPath>BSP_Buttons.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1234,7 +1194,7 @@
   </Group>
 
   <Group>
-    <GroupName>LittleVGL</GroupName>
+    <GroupName>LittlevGL</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
