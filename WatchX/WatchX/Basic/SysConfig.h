@@ -3,7 +3,7 @@
 
 #define WX_NAME             "WatchX"
 #define WX_HARDWARE_VERSION "v2.0"
-#define WX_SOFTWARE_VERSION "v0.7"
+#define WX_SOFTWARE_VERSION "v0.8"
 
 #define TFT_CS_Pin  PA4
 #define TFT_DC_Pin  PA8
@@ -11,6 +11,9 @@
 #define TFT_LED_Pin PA10
 
 #define LED_Pin     PC13
+
+#define POWER_ON_Pin PA3
+#define POWER_EN_Pin PA2
 
 #define KEY_UP_Pin   PB0
 #define KEY_OK_Pin   PB1

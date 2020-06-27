@@ -13,7 +13,7 @@ static lv_obj_t * imgArt;
 static lv_obj_t * labelDesigner;
 static lv_obj_t * labelFwInfo;
 
-static void Creat_Title(const char * text)
+static void Title_Creat(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -40,7 +40,7 @@ static void Creat_Title(const char * text)
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
-static void Creat_Img()
+static void Img_Creat()
 {
     LV_IMG_DECLARE(ImgWatchX);
     LV_IMG_DECLARE(ImgVIFEXTech);
@@ -61,7 +61,7 @@ static void Creat_Img()
     lv_obj_align(imgArt, imgProg, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 }
 
-static void Creat_LabelInfo()
+static void LabelInfo_Creat()
 {
     LV_FONT_DECLARE(HandGotn_14);
     labelDesigner = lv_label_create(appWindow, NULL);
@@ -150,10 +150,10 @@ static void Setup()
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
     
-    Creat_Title("About");
-    Creat_Img();
-    Creat_LabelInfo();
-    Creat_LabelInfo();
+    Title_Creat("About");
+    Img_Creat();
+    LabelInfo_Creat();
+    LabelInfo_Creat();
     PageAnimOpen(true);
 }
 
@@ -178,13 +178,13 @@ static void Event(int event, void* btn)
 {
     if(btn == &btOK)
     {
-        if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+        if(event == ButtonEvent::EVENT_ButtonLongPressed)
         {
             page.PagePop();
         }
     }
     
-    if(event == ButtonEvent_Type::EVENT_ButtonPress || event == ButtonEvent_Type::EVENT_ButtonLongPressRepeat)
+    if(event == ButtonEvent::EVENT_ButtonPress || event == ButtonEvent::EVENT_ButtonLongPressRepeat)
     {
         if(btn == &btUP)
         {

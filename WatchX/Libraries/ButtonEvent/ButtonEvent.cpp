@@ -1,7 +1,5 @@
 #include "ButtonEvent.h"
 
-using namespace ButtonEvent_Type;
-
 #ifdef ARDUINO
 #include "Arduino.h"
 #define ButtonEvent_Millis millis()

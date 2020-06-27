@@ -7,23 +7,32 @@
 /*BMP*/
 #include "Adafruit_BMP180/Adafruit_BMP085.h"
 extern Adafruit_BMP085 BMP180;
+void BMP_Init();
+void BMP_Update();
 
 /*Backlight*/
+void Backlight_Init();
 uint16_t Backlight_GetValue();
 void Backlight_SetValue(int16_t val);
 void Backlight_SetGradual(uint16_t target, uint16_t time = 500);
+void Backlight_UpdateBKP(void);
+uint16_t Backlight_GetBKP(void);
 
 /*Buttons*/
 #include "ButtonEvent/ButtonEvent.h"
 extern ButtonEvent btUP;
 extern ButtonEvent btOK;
 extern ButtonEvent btDOWN;
+void Button_Init();
+void Button_Update();
 
 /*Power*/
-void Power_EnterLowPowerMode();
+void Power_Init();
+void Power_Shutdown();
 void Power_HandleTimeUpdate();
-void Power_SetAutoLowPowerTimeout(int16_t ms);
+void Power_SetAutoLowPowerTimeout(uint16_t ms);
+uint16_t Power_GetAutoLowPowerTimeout();
 void Power_SetAutoLowPowerEnable(bool en);
-void Task_AutoPowerDown();
+void Power_AutoShutdownUpdate();
 
 #endif

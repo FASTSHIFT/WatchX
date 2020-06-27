@@ -9,7 +9,9 @@ static lv_obj_t * lineTitle;
 static lv_obj_t * labelBright;
 static lv_obj_t * arcBright;
 
-const uint16_t BrightMinVal = 10;
+static lv_obj_t * labelTime;
+
+static const uint16_t BrightMinVal = 10;
 static int16_t ArcNowAngle = 0;
 
 static void ArcBright_AnimCallback(lv_obj_t * obj, int16_t angle)
@@ -52,7 +54,7 @@ static void BrightCtrl(int8_t dir)
     }
 }
 
-static void Creat_Title(const char * text)
+static void Title_Creat(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -79,7 +81,7 @@ static void Creat_Title(const char * text)
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
-static void Creat_Bright()
+static void Bright_Creat()
 {
     static lv_style_t style_arc;
     style_arc = lv_style_plain;
@@ -107,6 +109,47 @@ static void Creat_Bright()
     lv_obj_set_auto_realign(labelBright, true);
     lv_obj_set_opa_scale_enable(labelBright, true);
     lv_obj_set_opa_scale(labelBright, LV_OPA_TRANSP);
+}
+
+static void LabelTime_Creat()
+{
+    LV_FONT_DECLARE(HandGotn_20);
+    
+    labelTime = lv_label_create(appWindow, NULL);
+    static lv_style_t style_label;
+    style_label = *lv_label_get_style(labelTime, LV_LABEL_STYLE_MAIN);
+    style_label.text.font = &HandGotn_20;
+    style_label.text.color = LV_COLOR_WHITE;
+    lv_label_set_style(labelTime, LV_LABEL_STYLE_MAIN, &style_label);
+    lv_obj_align(labelTime, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -5);
+    lv_obj_set_auto_realign(labelTime, true);
+    lv_obj_set_hidden(labelTime, true);
+    
+    lv_label_set_text_fmt(labelTime, "%d Sec", Power_GetAutoLowPowerTimeout());
+}
+
+static void LabelTime_AddIndex(int8_t dir)
+{
+    static const uint16_t TimeGrp[] = {
+        5, 10, 30, 60, 120, 300
+    };
+    
+    uint16_t time = Power_GetAutoLowPowerTimeout();
+    
+    int16_t index = 2;
+    
+    for(int i = 0; i < __Sizeof(TimeGrp); i++)
+    {
+        if(time == TimeGrp[i])
+        {
+            index = i;
+            break;
+        }
+    }
+    
+    __ValuePlus(index, dir, 0, __Sizeof(TimeGrp) - 1);
+    Power_SetAutoLowPowerTimeout(TimeGrp[index]);
+    lv_label_set_text_fmt(labelTime, "%d Sec", Power_GetAutoLowPowerTimeout());
 }
 
 static void BrightAnim(bool open)
@@ -145,8 +188,9 @@ static void Setup()
     
     ArcNowAngle = 0;
     
-    Creat_Title("Backlight");
-    Creat_Bright();
+    Title_Creat("Backlight");
+    Bright_Creat();
+    LabelTime_Creat();
 
     BrightCtrl(0);
     BrightAnim(true);
@@ -173,22 +217,40 @@ static void Event(int event, void* btn)
 {
     if(btn == &btOK)
     {
-        if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+        if(event == ButtonEvent::EVENT_ButtonLongPressed)
         {
             page.PagePop();
         }
+        else if(event == ButtonEvent::EVENT_ButtonClick)
+        {
+            lv_obj_set_hidden(labelTime, !lv_obj_get_hidden(labelTime));
+        }
     }
     
-    if(event == ButtonEvent_Type::EVENT_ButtonPress || event == ButtonEvent_Type::EVENT_ButtonLongPressRepeat)
+    if(event == ButtonEvent::EVENT_ButtonPress || event == ButtonEvent::EVENT_ButtonLongPressRepeat)
     {
-        int valPlus = event == ButtonEvent_Type::EVENT_ButtonPress ? 10 : 50;
+        int valPlus = event == ButtonEvent::EVENT_ButtonPress ? 10 : 50;
         if(btn == &btUP)
         {
-            BrightCtrl(+valPlus);
+            if(!lv_obj_get_hidden(labelTime))
+            {
+                LabelTime_AddIndex(+1);
+            }
+            else
+            {
+                BrightCtrl(+valPlus);
+            }
         }
         if(btn == &btDOWN)
         {
-            BrightCtrl(-valPlus);
+            if(!lv_obj_get_hidden(labelTime))
+            {
+                LabelTime_AddIndex(-1);
+            }
+            else
+            {
+                BrightCtrl(-valPlus);
+            }
         }
     }
 }

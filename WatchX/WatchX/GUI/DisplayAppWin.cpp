@@ -22,7 +22,7 @@ lv_coord_t AppWindow_GetWidth()
     return (lv_obj_get_width(lv_scr_act()));
 }
 
-void Creat_AppWindow()
+void AppWindow_Creat()
 {
     for(int i = 0; i < PAGE_MAX; i++)
     {

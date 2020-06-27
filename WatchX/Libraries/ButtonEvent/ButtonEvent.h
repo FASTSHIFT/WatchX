@@ -9,6 +9,7 @@
   * @Upgrade 2019.8.26  添加GetClicked、GetPressed、GetLongPressed非事件模式支持。
   * @Upgrade 2019.12.4  使用了新的事件回调设计，所有事件统一用EventAttach。
                         添加Click、LongPressed、LongPressRepeat事件。
+  * @Upgrade 2020.6.12  合并ButtonEvent_Type至ButtonEvent类
   ******************************************************************************
   * @attention
   * 需要提供一个精确到毫秒级的系统时钟，用户需要在ButtonEvent.cpp里定义ButtonEvent_Millis
@@ -21,30 +22,27 @@
 
 #include "stdint.h"
 
-namespace ButtonEvent_Type
-{
-typedef enum
-{
-    EVENT_ButtonNone,
-    EVENT_ButtonPress,
-    EVENT_ButtonLongPressed,
-    EVENT_ButtonLongPressRepeat,
-    EVENT_ButtonRelease,
-    EVENT_ButtonChange,
-    EVENT_ButtonClick,
-    EVENT_ButtonDoubleClick,
-} Event_Type;
-};
-
 class ButtonEvent
 {
-    typedef void(*ButtonEvent_FuncCallBack_t)(ButtonEvent*,int);
+    typedef void(*ButtonEvent_FuncCallBack_t)(ButtonEvent*, int);
 public:
     ButtonEvent(
-        bool NoPressState = 0, 
-        uint16_t LongPressTimeMs_Set = 500, 
+        bool NoPressState = 0,
+        uint16_t LongPressTimeMs_Set = 500,
         uint16_t LongPressTimeRepeatMs_Set = 200
     );
+
+    enum Event_Type
+    {
+        EVENT_ButtonNone,
+        EVENT_ButtonPress,
+        EVENT_ButtonLongPressed,
+        EVENT_ButtonLongPressRepeat,
+        EVENT_ButtonRelease,
+        EVENT_ButtonChange,
+        EVENT_ButtonClick,
+        EVENT_ButtonDoubleClick,
+    };
 
     bool IsPressed;
     bool IsClicked;
@@ -70,7 +68,7 @@ public:
         bool n = IsPressed;
         IsPressed = false;
         return n;
-    } 
+    }
     inline bool GetLongPressed()
     {
         bool n = IsLongPressed;
@@ -84,7 +82,8 @@ public:
     };
 
 private:
-    enum ButtonState{
+    enum ButtonState
+    {
         NoPress,
         Press,
         LongPress

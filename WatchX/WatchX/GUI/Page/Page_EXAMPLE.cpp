@@ -34,13 +34,13 @@ static void Event(int event, void* btn)
 {
     if(btn == &btOK)
     {
-        if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+        if(event == ButtonEvent::EVENT_ButtonLongPressed)
         {
             page.PagePop();
         }
     }
     
-    if(event == ButtonEvent_Type::EVENT_ButtonPress || event == ButtonEvent_Type::EVENT_ButtonLongPressRepeat)
+    if(event == ButtonEvent::EVENT_ButtonPress || event == ButtonEvent::EVENT_ButtonLongPressRepeat)
     {
         if(btn == &btUP)
         {

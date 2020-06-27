@@ -39,13 +39,13 @@ void Display_Init()
     lv_port_disp_init();
     lv_theme_set_current(lv_theme_night_init(200, NULL));
     
-    Creat_AppWindow();
+    AppWindow_Creat();
     Pages_Init();
     
-    Backlight_SetGradual(1000, 1000);
+    Backlight_SetGradual(Backlight_GetBKP(), 1000);
 }
 
-void Task_Display()
+void Display_Update()
 {
     lv_task_handler();
     page.Running();

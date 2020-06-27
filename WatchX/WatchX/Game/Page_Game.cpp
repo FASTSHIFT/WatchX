@@ -19,7 +19,7 @@ static void Task_GameScreenUpdate(lv_task_t * task)
     Game_DispTaskUpdate();
 }
 
-static void Creat_ContGameDisp()
+static void ContGameDisp_Creat()
 {
     contGameDisp = lv_cont_create(appWindow, NULL);
     lv_obj_set_size(contGameDisp, 128 + 4, 64 + 4);
@@ -32,7 +32,7 @@ void Game_DispGetContPos(int16_t* x, int16_t* y)
     *y = lv_obj_get_y(contGameDisp) + 2;
 }
 
-static void Creat_LED()
+static void LED_Creat()
 {
     /*Create a style for the LED*/
     static lv_style_t style_led[GAME_LED_MAX];
@@ -88,8 +88,8 @@ static void Setup()
     
     Game_Begin();
     
-    Creat_ContGameDisp();
-    Creat_LED();
+    ContGameDisp_Creat();
+    LED_Creat();
     
     int16_t x,y;
     Game_DispGetContPos(&x, &y);
@@ -130,7 +130,7 @@ static void Exit()
   */
 static void Event(int event, void* param)
 {
-    if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+    if(event == ButtonEvent::EVENT_ButtonLongPressed)
     {
         if(param == &btOK)
         {

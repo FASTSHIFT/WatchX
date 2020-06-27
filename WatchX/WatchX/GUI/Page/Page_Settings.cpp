@@ -39,7 +39,7 @@ static int8_t ICON_NowSelIndex = 0;
 
 #define ICON_MAX_INDEX (__Sizeof(ICON_Grp) - 1)
 
-static void Creat_ICON_Grp()
+static void ICON_Grp_Creat()
 {
     contDisp = lv_cont_create(appWindow, NULL);
     lv_cont_set_style(contDisp, LV_CONT_STYLE_MAIN, &lv_style_transp);
@@ -77,7 +77,7 @@ static void Creat_ICON_Grp()
     }
 }
 
-static void Creat_Title()
+static void Title_Creat()
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -122,7 +122,7 @@ static void ICON_Grp_Move(int8_t dir)
     ICON_Grp_MoveFouce(ICON_NowSelIndex);
 }
 
-static void Creat_ImgShadow(void)
+static void ImgShadow_Creat(void)
 {
     LV_IMG_DECLARE(ImgShadowUp);
     LV_IMG_DECLARE(ImgShadowDown);
@@ -145,9 +145,9 @@ static void Setup()
 {
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
-    Creat_Title();
-    Creat_ICON_Grp();
-    Creat_ImgShadow();
+    Title_Creat();
+    ICON_Grp_Creat();
+    ImgShadow_Creat();
     ICON_Grp_MoveFouce(ICON_NowSelIndex);
 }
 
@@ -173,11 +173,11 @@ static void Event(int event, void* btn)
 {
     if(btn == &btOK)
     {
-        if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+        if(event == ButtonEvent::EVENT_ButtonLongPressed)
         {
             page.PagePop();
         }
-        else if(event == ButtonEvent_Type::EVENT_ButtonClick)
+        else if(event == ButtonEvent::EVENT_ButtonClick)
         {
             uint8_t pageID = ICON_Grp[ICON_NowSelIndex].pageID;
             if(pageID != PAGE_NONE)
@@ -187,7 +187,7 @@ static void Event(int event, void* btn)
         }
     }
     
-    if(event == ButtonEvent_Type::EVENT_ButtonPress || event == ButtonEvent_Type::EVENT_ButtonLongPressRepeat)
+    if(event == ButtonEvent::EVENT_ButtonPress || event == ButtonEvent::EVENT_ButtonLongPressRepeat)
     {
         if(btn == &btUP)
         {

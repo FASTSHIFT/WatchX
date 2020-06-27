@@ -24,7 +24,7 @@ static lv_obj_t * labelStepCnt;
 static lv_task_t * taskTimeUpdate;
 static lv_task_t * taskTopBarUpdate;
 
-static void Creat_ImgBg(void)
+static void ImgBg_Creat(void)
 {
     LV_IMG_DECLARE(ImgBg);
     imgBg = lv_img_create(appWindow, NULL);
@@ -34,11 +34,11 @@ static void Creat_ImgBg(void)
 
 static void Task_TopBarUpdate(lv_task_t * task)
 {
-    Task_BMP_Update();
+    BMP_Update();
     lv_label_set_text_fmt(labelBMP, "% 2dC"LV_SYMBOL_DEGREE_SIGN" %dm", (int)BMP180.temperature, (int)BMP180.altitude);
     
-    float battVoltage = 3.7;//(float)analogRead_DMA(BAT_DET_Pin) / 4095.0f * 3.3f * 2;
-    bool Is_BattCharging = digitalRead(BAT_CHG_Pin);
+    float battVoltage = (float)analogRead_DMA(BAT_DET_Pin) / 4095.0f * 3.3f * 2;
+    bool Is_BattCharging = !digitalRead(BAT_CHG_Pin);
 
     const char * battSymbol[] =
     {
@@ -67,7 +67,7 @@ static void Task_TopBarUpdate(lv_task_t * task)
     lv_label_set_text_fmt(labelBatt, "#FFFFFF %s#", battSymbol[symIndex]);
 }
 
-static void Creat_LabelTopBar()
+static void LabelTopBar_Creat()
 {
     LV_FONT_DECLARE(HandGotn_14);
     labelBMP = lv_label_create(appWindow, NULL);
@@ -157,7 +157,7 @@ static void Task_TimeUpdate(lv_task_t * task)
     lv_label_set_text_fmt(labelDate, "%02d#FF0000 /#%02d %s", RTC_Date.RTC_Month, RTC_Date.RTC_Date, week_str[index]);
 }
 
-static void Creat_LabelDate()
+static void LabelDate_Creat()
 {
     LV_FONT_DECLARE(Morganite_36);
     labelDate = lv_label_create(appWindow, NULL);
@@ -174,9 +174,9 @@ static void Creat_LabelDate()
     lv_obj_set_auto_realign(labelDate, true);
 }
 
-static void Creat_LabelTime()
+static void LabelTime_Creat()
 {
-    Creat_LabelDate();
+    LabelDate_Creat();
     
     /*contTime*/
     contTime = lv_cont_create(appWindow, NULL);
@@ -227,7 +227,7 @@ static void Creat_LabelTime()
     Task_TimeUpdate(taskTimeUpdate);
 }
 
-static void Creat_LabelStep()
+static void LabelStep_Creat()
 {
     LV_IMG_DECLARE(ImgRun);
     imgRun = lv_img_create(appWindow, NULL);
@@ -260,10 +260,10 @@ static void Setup()
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
     
-    Creat_ImgBg();
-    Creat_LabelTopBar();
-    Creat_LabelTime();
-    Creat_LabelStep();
+    ImgBg_Creat();
+    LabelTopBar_Creat();
+    LabelTime_Creat();
+    LabelStep_Creat();
     
     Power_SetAutoLowPowerEnable(true);
 }
@@ -294,7 +294,7 @@ static void Exit()
   */
 static void Event(int event, void* btn)
 {
-    if(event == ButtonEvent_Type::EVENT_ButtonClick || event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+    if(event == ButtonEvent::EVENT_ButtonClick || event == ButtonEvent::EVENT_ButtonLongPressed)
     {
         page.PagePush(PAGE_Settings);
     }

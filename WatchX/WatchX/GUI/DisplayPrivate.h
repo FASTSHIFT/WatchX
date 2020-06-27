@@ -17,6 +17,8 @@ extern SCREEN_CLASS screen;
 #define ScreenMid_H (screen.height()/2)
 
 void DisplayError_Init();
+void Display_Init();
+void Display_Update();
 
 /*Page*/
 #include "PageManager/PageManager.h"
@@ -79,7 +81,7 @@ do{\
 }while(0)
 
 /*AppWindow*/
-void Creat_AppWindow();
+void AppWindow_Creat();
 lv_obj_t * AppWindow_GetCont(uint8_t pageID);
 lv_coord_t AppWindow_GetHeight();
 lv_coord_t AppWindow_GetWidth();

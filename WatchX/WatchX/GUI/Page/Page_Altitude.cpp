@@ -18,7 +18,7 @@ static lv_task_t * taskChartUpdate;
 
 static lv_style_t style_label_public;
 
-static void Creat_Title(const char * text)
+static void Title_Creat(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -45,7 +45,7 @@ static void Creat_Title(const char * text)
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
-static void Creat_ContKPaTemp()
+static void ContKPaTemp_Creat()
 {
     contKPaTemp = lv_cont_create(appWindow, NULL);
     lv_obj_set_size(contKPaTemp, 130, 58);
@@ -63,7 +63,7 @@ static void Creat_ContKPaTemp()
     lv_cont_set_style(contKPaTemp, LV_CONT_STYLE_MAIN, &style_cont);
 }
 
-static void Creat_LabelKPaTemp()
+static void LabelKPaTemp_Creat()
 {
     LV_IMG_DECLARE(ImgPressure);
     lv_obj_t * imgP = lv_img_create(contKPaTemp, NULL);
@@ -152,7 +152,7 @@ static void ChartAlt_AutoRangeProcess()
 
 static void Task_ChartUpdate(lv_task_t * task)
 {
-    Task_BMP_Update();
+    BMP_Update();
     lv_label_set_text_fmt(labelKPa, "%0.2f", (float)BMP180.pressure / 1000.0f);
     lv_label_set_text_fmt(labelTemp, "%0.1fC"LV_SYMBOL_DEGREE_SIGN, BMP180.temperature);
     lv_label_set_text_fmt(labelAlt, BMP180.altitude > 0.0f ? "%+0.1fm" : "%0.1fm", BMP180.altitude);
@@ -160,7 +160,7 @@ static void Task_ChartUpdate(lv_task_t * task)
     ChartAlt_AutoRangeProcess();
 }
 
-static void Creat_ChartAlt()
+static void ChartAlt_Creat()
 {
     chartAlt = lv_chart_create(appWindow , NULL);
     
@@ -251,10 +251,10 @@ static void Setup()
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
     
-    Creat_Title("Altitude");
-    Creat_ContKPaTemp();
-    Creat_LabelKPaTemp();
-    Creat_ChartAlt();
+    Title_Creat("Altitude");
+    ContKPaTemp_Creat();
+    LabelKPaTemp_Creat();
+    ChartAlt_Creat();
     
     taskChartUpdate = lv_task_create(Task_ChartUpdate, 1000, LV_TASK_PRIO_MID, NULL);
     Task_ChartUpdate(taskChartUpdate);
@@ -283,13 +283,13 @@ static void Event(int event, void* btn)
 {
     if(btn == &btOK)
     {
-        if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+        if(event == ButtonEvent::EVENT_ButtonLongPressed)
         {
             page.PagePop();
         }
     }
     
-    if(event == ButtonEvent_Type::EVENT_ButtonPress || event == ButtonEvent_Type::EVENT_ButtonLongPressRepeat)
+    if(event == ButtonEvent::EVENT_ButtonPress || event == ButtonEvent::EVENT_ButtonLongPressRepeat)
     {
         if(btn == &btUP)
         {

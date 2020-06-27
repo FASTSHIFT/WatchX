@@ -15,7 +15,7 @@ static lv_obj_t * contRecord;
 #define SW_RECORD_MAX 3
 static lv_obj_t * labelRecord_Grp[SW_RECORD_MAX];
 
-static void Creat_Title(const char * text)
+static void Title_Creat(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -42,7 +42,7 @@ static void Creat_Title(const char * text)
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
-static void Creat_LmeterSec(void)
+static void LmeterSec_Creat(void)
 {
     static lv_style_t style_lmeter;
     style_lmeter = lv_style_pretty_color;
@@ -65,7 +65,7 @@ static void Creat_LmeterSec(void)
     lv_obj_align(lmeterSec, lineTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 }
 
-static void Creat_LabelTime()
+static void LabelTime_Creat()
 {
     LV_FONT_DECLARE(HandGotn_26);
     
@@ -102,7 +102,7 @@ static void Creat_LabelTime()
     lv_obj_set_auto_realign(labelMs, true);
 }
 
-static void Creat_ContRecord()
+static void ContRecord_Creat()
 {
     contRecord = lv_cont_create(appWindow, NULL);
     lv_obj_set_size(contRecord, 128, 60);
@@ -136,7 +136,7 @@ static void Creat_ContRecord()
     lv_obj_set_opa_scale(contRecord, LV_OPA_TRANSP);
 }
 
-static void Creat_LabelRecord()
+static void LabelRecord_Creat()
 {
     LV_FONT_DECLARE(HandGotn_14);
     static lv_style_t style_label;
@@ -324,11 +324,11 @@ static void Setup()
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
     
-    Creat_Title("StopWatch");
-    Creat_LmeterSec();
-    Creat_LabelTime();
-    Creat_ContRecord();
-    Creat_LabelRecord();
+    Title_Creat("StopWatch");
+    LmeterSec_Creat();
+    LabelTime_Creat();
+    ContRecord_Creat();
+    LabelRecord_Creat();
     SW_Init();
     ContAnimOpen(true);
 }
@@ -355,13 +355,13 @@ static void Event(int event, void* btn)
 {
     if(btn == &btOK)
     {
-        if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+        if(event == ButtonEvent::EVENT_ButtonLongPressed)
         {
             page.PagePop();
         }
     }
     
-    if(event == ButtonEvent_Type::EVENT_ButtonPress)
+    if(event == ButtonEvent::EVENT_ButtonPress)
     {
         if(btn == &btUP)
         {
@@ -373,7 +373,7 @@ static void Event(int event, void* btn)
         }
     }
     
-    if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+    if(event == ButtonEvent::EVENT_ButtonLongPressed)
     {
         if(btn == &btDOWN)
         {

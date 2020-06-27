@@ -53,7 +53,7 @@ static void TitleUpdate()
     lv_label_set_static_text(labelTitle, text);
 }
 
-static void Creat_Title()
+static void Title_Creat()
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -80,7 +80,7 @@ static void Creat_Title()
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
-static void Creat_ContTimeDate()
+static void ContTimeDate_Creat()
 {
     contTime = lv_cont_create(appWindow, NULL);
     lv_obj_set_size(contTime, 128, 42);
@@ -162,7 +162,7 @@ static void LabelDateUpdate(uint8_t highLight = 0)
     LabelWeekUpdate();
 }
 
-static void Creat_LabelTimeDate()
+static void LabelTimeDate_Creat()
 {
     /*Ê±¼ä*/
     RTC_GetTime(RTC_Format_BIN, &RTC_Time);
@@ -287,7 +287,7 @@ static void ContAnimMove(bool down)
     }
 }
 
-static void Creat_ContAnim()
+static void ContAnim_Creat()
 {
     contTimeAnim = lv_cont_create(contTime, contTime);
     lv_obj_set_size(contTimeAnim, lv_obj_get_width(contTime), lv_obj_get_height(contTime));
@@ -319,10 +319,11 @@ static void Setup()
     CfgSelIndex = 0;
     CfgChanged = false;
     
-    Creat_Title();
-    Creat_ContTimeDate();
-    Creat_LabelTimeDate();
-    Creat_ContAnim();
+    Title_Creat();
+    ContTimeDate_Creat();
+    LabelTimeDate_Creat();
+    
+    ContAnim_Creat();
     ContAnimMove(true);
 }
 
@@ -347,7 +348,7 @@ static void Event(int event, void* btn)
 {
     if(btn == &btOK)
     {
-        if(event == ButtonEvent_Type::EVENT_ButtonLongPressed)
+        if(event == ButtonEvent::EVENT_ButtonLongPressed)
         {
             if(CfgSelIndex == 0 && CfgChanged)
             {
@@ -366,14 +367,14 @@ static void Event(int event, void* btn)
             }
             page.PagePop();
         }
-        if(event == ButtonEvent_Type::EVENT_ButtonClick)
+        if(event == ButtonEvent::EVENT_ButtonClick)
         {
             __ValuePlus(CfgSelIndex, 1, 0, 6);
             TimeConfigValueUpdate();
         }
     }
     
-    if(event == ButtonEvent_Type::EVENT_ButtonPress || event == ButtonEvent_Type::EVENT_ButtonLongPressRepeat)
+    if(event == ButtonEvent::EVENT_ButtonPress || event == ButtonEvent::EVENT_ButtonLongPressRepeat)
     {
         if(btn == &btUP)
         {
