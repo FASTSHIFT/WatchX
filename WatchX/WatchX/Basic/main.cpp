@@ -23,10 +23,6 @@ static void setup()
     /*电源按键*/
     pinMode(POWER_EN_Pin, INPUT);
     
-    /*电池电压检测*/
-    pinMode(BAT_DET_Pin, INPUT_ANALOG_DMA);
-    ADC_DMA_Init();
-    
     /*电池充电检测*/
     pinMode(BAT_CHG_Pin, INPUT_PULLUP);
 
@@ -37,6 +33,10 @@ static void setup()
     Button_Init();
     Display_Init();
     BMP_Init();
+    
+    /*电池电压检测*/
+    pinMode(BAT_DET_Pin, INPUT_ANALOG_DMA);
+    ADC_DMA_Init();
 
     digitalWrite(LED_Pin, LOW);
 
