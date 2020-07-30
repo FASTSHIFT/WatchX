@@ -1,14 +1,22 @@
 #include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 
+/*此页面窗口*/
 static lv_obj_t * appWindow;
 
+/*标题栏*/
 static lv_obj_t * labelTitle;
+
+/*标题栏分隔线*/
 static lv_obj_t * lineTitle;
 
+/*图标显示容器，用于裁剪显示*/
 static lv_obj_t * contDisp;
+
+/*图标组容器*/
 static lv_obj_t * contICON;
 
+/*图片资源*/
 LV_IMG_DECLARE(ImgStopWatch);
 LV_IMG_DECLARE(ImgMountain);
 LV_IMG_DECLARE(ImgLight);
@@ -16,29 +24,39 @@ LV_IMG_DECLARE(ImgTimeCfg);
 LV_IMG_DECLARE(ImgInfo);
 LV_IMG_DECLARE(ImgButterfly);
 
+/*图标信息定义*/
 typedef struct{
-    const void * src_img;
-    const char * text;
-    lv_obj_t * img;
-    uint8_t pageID;
+    const void * src_img;   //图片数据地址
+    const char * text;      //文字描述
+    lv_obj_t * img;         //图片控件
+    uint8_t pageID;         //对应的页面ID
 }ICON_TypeDef;
 
-ICON_TypeDef ICON_Grp[] = 
+/*图标组定义*/
+static ICON_TypeDef ICON_Grp[] = 
 {
-    {.src_img = &ImgStopWatch, .text = "StopWatch",  .pageID = PAGE_StopWatch},
-    {.src_img = &ImgMountain,  .text = "Altitude",   .pageID = PAGE_Altitude},
-    {.src_img = &ImgLight,     .text = "Backlight", .pageID = PAGE_Backlight},
-    {.src_img = &ImgTimeCfg,   .text = "TimeCfg",    .pageID = PAGE_TimeCfg},
-    {.src_img = &ImgButterfly, .text = "Game",       .pageID = PAGE_Game},
-    {.src_img = &ImgInfo,      .text = "About",      .pageID = PAGE_About}
+    {.src_img = &ImgStopWatch, .text = "StopWatch",  .pageID = PAGE_StopWatch},  //秒表
+    {.src_img = &ImgMountain,  .text = "Altitude",   .pageID = PAGE_Altitude},   //海拔表
+    {.src_img = &ImgLight,     .text = "Backlight",  .pageID = PAGE_Backlight},  //背光设置
+    {.src_img = &ImgTimeCfg,   .text = "TimeCfg",    .pageID = PAGE_TimeCfg},    //时间设置
+    {.src_img = &ImgButterfly, .text = "Game",       .pageID = PAGE_Game},       //游戏
+    {.src_img = &ImgInfo,      .text = "About",      .pageID = PAGE_About}       //关于
 };
 
+/*图标间隔*/
 static const uint8_t ICON_IntervalPixel = 20;
+/*图标大小*/
 static const uint8_t ICON_Size = 50;
+/*当前选中的图标索引*/
 static int8_t ICON_NowSelIndex = 0;
-
+/*图标索引最大值*/
 #define ICON_MAX_INDEX (__Sizeof(ICON_Grp) - 1)
 
+/**
+  * @brief  创建图标组
+  * @param  无
+  * @retval 无
+  */
 static void ICON_Grp_Creat()
 {
     contDisp = lv_cont_create(appWindow, NULL);
@@ -64,19 +82,27 @@ static void ICON_Grp_Creat()
 //    style_cont.body.radius = 5;
 //    lv_cont_set_style(contSel, LV_CONT_STYLE_MAIN, &style_cont);
     
+    /*遍历图标组*/
     for(int i = 0; i < __Sizeof(ICON_Grp); i++)
     {
+        /*创建图片控件*/
         lv_obj_t * img = lv_img_create(contICON, NULL);
         ICON_Grp[i].img = img;
         lv_img_set_src(img, ICON_Grp[i].src_img);
         lv_obj_align(img, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
         
+        /*计算偏移量*/
         int y_offset = (ICON_Size - lv_obj_get_height(img)) / 2;
         
         lv_obj_set_y(img, (ICON_Size + ICON_IntervalPixel) * i + y_offset);
     }
 }
 
+/**
+  * @brief  创建标题栏
+  * @param  无
+  * @retval 无
+  */
 static void Title_Creat()
 {
     LV_FONT_DECLARE(HandGotn_20);
@@ -88,6 +114,7 @@ static void Title_Creat()
     style_label.text.color = LV_COLOR_WHITE;
     lv_label_set_style(labelTitle, LV_LABEL_STYLE_MAIN, &style_label);
     
+    /*默认选中的是第二个图标*/
     lv_label_set_static_text(labelTitle, ICON_Grp[1].text);
     lv_obj_align(labelTitle, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
     lv_obj_set_auto_realign(labelTitle, true);
@@ -104,25 +131,46 @@ static void Title_Creat()
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
+/**
+  * @brief  移动到选中图标
+  * @param  iconIndex:目标图标的索引
+  * @retval 无
+  */
 static void ICON_Grp_MoveFouce(uint8_t iconIndex)
 {
     if(iconIndex > ICON_MAX_INDEX)
         return;
     
+    /*改变标题栏的文字说明*/
     lv_label_set_static_text(labelTitle, ICON_Grp[iconIndex].text);
     
+    /*计算目标Y坐标*/
     int16_t target_y = -(ICON_Size + ICON_IntervalPixel) * (iconIndex - 1);
 
+    /*执行滑动动画*/
     LV_OBJ_ADD_ANIM(contICON, y, target_y, LV_ANIM_TIME_DEFAULT);
 }
 
+/**
+  * @brief  上下移动选中的图标
+  * @param  dir:方向
+  * @retval 无
+  */
 static void ICON_Grp_Move(int8_t dir)
 {
+    /*在限定范围内移动*/
     __ValuePlus(ICON_NowSelIndex, dir, 0, ICON_MAX_INDEX);
+    
+    /*移动到新图标*/
     ICON_Grp_MoveFouce(ICON_NowSelIndex);
 }
 
-static void ImgShadow_Creat(void)
+/**
+  * @brief  创建滚轮阴影
+  * @param  无
+  * @retval 无
+  */
+static void ImgShadow_Creat()
 {
     LV_IMG_DECLARE(ImgShadowUp);
     LV_IMG_DECLARE(ImgShadowDown);
@@ -148,6 +196,8 @@ static void Setup()
     Title_Creat();
     ICON_Grp_Creat();
     ImgShadow_Creat();
+    
+    /*图标滑到上一次选中的图标*/
     ICON_Grp_MoveFouce(ICON_NowSelIndex);
 }
 
@@ -158,6 +208,7 @@ static void Setup()
   */
 static void Exit()
 {
+    /*图标全部滑出*/
     LV_OBJ_ADD_ANIM(contICON, y, lv_obj_get_height(contDisp) + ICON_Size, LV_ANIM_TIME_DEFAULT);
     PageDelay(LV_ANIM_TIME_DEFAULT);
     lv_obj_clean(appWindow);
@@ -165,20 +216,22 @@ static void Exit()
 
 /**
   * @brief  页面事件
+  * @param  btn:发出事件的按键
   * @param  event:事件编号
-  * @param  param:事件参数
   * @retval 无
   */
-static void Event(int event, void* btn)
+static void Event(void* btn, int event)
 {
     if(btn == &btOK)
     {
         if(event == ButtonEvent::EVENT_ButtonLongPressed)
         {
+            /*长按OK，退出上一个页面*/
             page.PagePop();
         }
         else if(event == ButtonEvent::EVENT_ButtonClick)
         {
+            /*单击OK，进入对应页面*/
             uint8_t pageID = ICON_Grp[ICON_NowSelIndex].pageID;
             if(pageID != PAGE_NONE)
             {
@@ -189,6 +242,7 @@ static void Event(int event, void* btn)
     
     if(event == ButtonEvent::EVENT_ButtonPress || event == ButtonEvent::EVENT_ButtonLongPressRepeat)
     {
+        /*按下或长按上下键，图标上下选择*/
         if(btn == &btUP)
         {
             ICON_Grp_Move(-1);
@@ -205,8 +259,11 @@ static void Event(int event, void* btn)
   * @param  pageID:为此页面分配的ID号
   * @retval 无
   */
-void PageRegister_Settings(uint8_t pageID)
+void PageRegister_MainMenu(uint8_t pageID)
 {
+    /*获取分配给此页面的窗口*/
     appWindow = AppWindow_GetCont(pageID);
+    
+    /*注册至页面调度器*/
     page.PageRegister(pageID, Setup, NULL, Exit, Event);
 }

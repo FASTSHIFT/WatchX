@@ -30,7 +30,7 @@ void Button_Update();
 void Power_Init();
 void Power_Shutdown();
 void Power_HandleTimeUpdate();
-void Power_SetAutoLowPowerTimeout(uint16_t ms);
+void Power_SetAutoLowPowerTimeout(uint16_t sec);
 uint16_t Power_GetAutoLowPowerTimeout();
 void Power_SetAutoLowPowerEnable(bool en);
 void Power_AutoShutdownUpdate();

@@ -128,7 +128,7 @@ static void Exit()
   * @param  param:事件参数
   * @retval 无
   */
-static void Event(int event, void* param)
+static void Event(void* param, int event)
 {
     if(event == ButtonEvent::EVENT_ButtonLongPressed)
     {

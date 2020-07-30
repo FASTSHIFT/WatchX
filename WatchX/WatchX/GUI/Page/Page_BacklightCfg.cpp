@@ -1,19 +1,36 @@
 #include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 
+/*此页面窗口*/
 static lv_obj_t * appWindow;
 
+/*标题栏*/
 static lv_obj_t * labelTitle;
+
+/*标题栏分隔线*/
 static lv_obj_t * lineTitle;
 
+/*亮度值标签*/
 static lv_obj_t * labelBright;
+
+/*亮度指示弧*/
 static lv_obj_t * arcBright;
 
+/*自动关机时间*/
 static lv_obj_t * labelTime;
 
+/*最小亮度限制*/
 static const uint16_t BrightMinVal = 10;
+
+/*亮度指示弧角度*/
 static int16_t ArcNowAngle = 0;
 
+/**
+  * @brief  亮度指示弧动画回调
+  * @param  obj:无用
+  * @param  angle:角度0~359
+  * @retval 无
+  */
 static void ArcBright_AnimCallback(lv_obj_t * obj, int16_t angle)
 {
     ArcNowAngle = angle;
@@ -27,6 +44,12 @@ static void ArcBright_AnimCallback(lv_obj_t * obj, int16_t angle)
     }
 }
 
+/**
+  * @brief  亮度指示弧设定角度，动画方式渐变
+  * @param  targetAngle:角度
+  * @param  anim_time:动画时间(默认500ms)
+  * @retval 无
+  */
 static void BrightArcSetVal(int targetAngle, uint16_t anim_time = 500)
 {
     static lv_anim_t a;
@@ -39,6 +62,11 @@ static void BrightArcSetVal(int targetAngle, uint16_t anim_time = 500)
     );
 }
 
+/**
+  * @brief  亮度设定
+  * @param  dir:提升或降低
+  * @retval 无
+  */
 static void BrightCtrl(int8_t dir)
 {
     int16_t brightVal = Backlight_GetValue();
@@ -54,6 +82,11 @@ static void BrightCtrl(int8_t dir)
     }
 }
 
+/**
+  * @brief  创建标题栏
+  * @param  text:标题栏文本
+  * @retval 无
+  */
 static void Title_Creat(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
@@ -81,6 +114,11 @@ static void Title_Creat(const char * text)
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
+/**
+  * @brief  创建亮度指示弧线
+  * @param  无
+  * @retval 无
+  */
 static void Bright_Creat()
 {
     static lv_style_t style_arc;
@@ -111,6 +149,11 @@ static void Bright_Creat()
     lv_obj_set_opa_scale(labelBright, LV_OPA_TRANSP);
 }
 
+/**
+  * @brief  创建自动关机时间标签
+  * @param  无
+  * @retval 无
+  */
 static void LabelTime_Creat()
 {
     LV_FONT_DECLARE(HandGotn_20);
@@ -128,6 +171,11 @@ static void LabelTime_Creat()
     lv_label_set_text_fmt(labelTime, "%d Sec", Power_GetAutoLowPowerTimeout());
 }
 
+/**
+  * @brief  设置自动关机时间
+  * @param  dir:增加或减少时间
+  * @retval 无
+  */
 static void LabelTime_AddIndex(int8_t dir)
 {
     static const uint16_t TimeGrp[] = {
@@ -152,12 +200,17 @@ static void LabelTime_AddIndex(int8_t dir)
     lv_label_set_text_fmt(labelTime, "%d Sec", Power_GetAutoLowPowerTimeout());
 }
 
-static void BrightAnim(bool open)
+/**
+  * @brief  页面动画播放
+  * @param  open:是否为页面进入时的动画
+  * @retval 无
+  */
+static void PagePlayAnim(bool open)
 {
     int step = open ? 0 : 1;
     
     int cnt = 2;
-    int targetAngle;
+    int targetAngle = 0;
     while(cnt--)
     {
         switch(step)
@@ -193,7 +246,7 @@ static void Setup()
     LabelTime_Creat();
 
     BrightCtrl(0);
-    BrightAnim(true);
+    PagePlayAnim(true);
 }
 
 /**
@@ -203,17 +256,17 @@ static void Setup()
   */
 static void Exit()
 {
-    BrightAnim(false);
+    PagePlayAnim(false);
     lv_obj_clean(appWindow);
 }
 
 /**
   * @brief  页面事件
+  * @param  btn:发出事件的按键
   * @param  event:事件编号
-  * @param  param:事件参数
   * @retval 无
   */
-static void Event(int event, void* btn)
+static void Event(void* btn, int event)
 {
     if(btn == &btOK)
     {
@@ -232,6 +285,7 @@ static void Event(int event, void* btn)
         int valPlus = event == ButtonEvent::EVENT_ButtonPress ? 10 : 50;
         if(btn == &btUP)
         {
+            /*如果时间隐藏，就调整亮度*/
             if(!lv_obj_get_hidden(labelTime))
             {
                 LabelTime_AddIndex(+1);
@@ -262,6 +316,9 @@ static void Event(int event, void* btn)
   */
 void PageRegister_Backlight(uint8_t pageID)
 {
+    /*获取分配给此页面的窗口*/
     appWindow = AppWindow_GetCont(pageID);
+    
+    /*注册至页面调度器*/
     page.PageRegister(pageID, Setup, NULL, Exit, Event);
 }

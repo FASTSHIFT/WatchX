@@ -35,13 +35,13 @@ void BeepPin1::begin()
 void BeepPin1::tone(uint16_t count)
 {
     //tone(count, 0);
-    Audio_Tone(COUNT_TO_FREQ(count));
+    //Audio_Tone(COUNT_TO_FREQ(count));
 }
 
 void BeepPin1::tone(uint16_t count, uint8_t dur)
 {
     duration = dur;
-    Audio_Tone(COUNT_TO_FREQ(count));
+    //Audio_Tone(COUNT_TO_FREQ(count));
     TCCR3A = bit(COM3A0); // set toggle on compare mode (which connects the pin)
     OCR3A = count; // load the count (16 bits), which determines the frequency
 }
@@ -57,7 +57,7 @@ void BeepPin1::timer()
 
 void BeepPin1::noTone()
 {
-    Audio_NoTone();
+    //Audio_NoTone();
     duration = 0;
     TCCR3A = 0; // set normal mode (which disconnects the pin)
 }

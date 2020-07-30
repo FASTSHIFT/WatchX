@@ -1,6 +1,7 @@
 #include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 
+/*此页面窗口*/
 static lv_obj_t * appWindow;
 
 /**
@@ -26,11 +27,11 @@ static void Exit()
 
 /**
   * @brief  页面事件
+  * @param  btn:发出事件的按键
   * @param  event:事件编号
-  * @param  param:事件参数
   * @retval 无
   */
-static void Event(int event, void* btn)
+static void Event(void* btn, int event)
 {
     if(btn == &btOK)
     {
@@ -56,8 +57,11 @@ static void Event(int event, void* btn)
   * @param  pageID:为此页面分配的ID号
   * @retval 无
   */
-void PageRegister_X(uint8_t pageID)
+void PageRegister_Home(uint8_t pageID)
 {
+    /*获取分配给此页面的窗口*/
     appWindow = AppWindow_GetCont(pageID);
+    
+    /*注册至页面调度器*/
     page.PageRegister(pageID, Setup, NULL, Exit, Event);
 }

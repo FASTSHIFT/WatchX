@@ -1,20 +1,36 @@
 #include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 
+/*此页面窗口*/
 static lv_obj_t * appWindow;
 
+/*标题栏*/
 static lv_obj_t * labelTitle;
+
+/*标题栏分隔线*/
 static lv_obj_t * lineTitle;
 
+/*秒线表*/
 static lv_obj_t * lmeterSec;
+/*时标签*/
 static lv_obj_t * labelHour;
+/*分秒标签*/
 static lv_obj_t * labelMinSec;
+/*毫秒标签*/
 static lv_obj_t * labelMs;
 
+/*历史记录容器*/
 static lv_obj_t * contRecord;
+/*记录3个历史*/
 #define SW_RECORD_MAX 3
+/*历史记录标签*/
 static lv_obj_t * labelRecord_Grp[SW_RECORD_MAX];
 
+/**
+  * @brief  创建标题栏
+  * @param  text:标题栏文本
+  * @retval 无
+  */
 static void Title_Creat(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
@@ -42,7 +58,12 @@ static void Title_Creat(const char * text)
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
-static void LmeterSec_Creat(void)
+/**
+  * @brief  创建秒线表
+  * @param  无
+  * @retval 无
+  */
+static void LmeterSec_Creat()
 {
     static lv_style_t style_lmeter;
     style_lmeter = lv_style_pretty_color;
@@ -65,6 +86,11 @@ static void LmeterSec_Creat(void)
     lv_obj_align(lmeterSec, lineTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 }
 
+/**
+  * @brief  创建时间标签
+  * @param  无
+  * @retval 无
+  */
 static void LabelTime_Creat()
 {
     LV_FONT_DECLARE(HandGotn_26);
@@ -102,6 +128,11 @@ static void LabelTime_Creat()
     lv_obj_set_auto_realign(labelMs, true);
 }
 
+/**
+  * @brief  创建历史记录容器
+  * @param  无
+  * @retval 无
+  */
 static void ContRecord_Creat()
 {
     contRecord = lv_cont_create(appWindow, NULL);
@@ -136,6 +167,11 @@ static void ContRecord_Creat()
     lv_obj_set_opa_scale(contRecord, LV_OPA_TRANSP);
 }
 
+/**
+  * @brief  创建历史记录标签
+  * @param  无
+  * @retval 无
+  */
 static void LabelRecord_Creat()
 {
     LV_FONT_DECLARE(HandGotn_14);
@@ -158,21 +194,32 @@ static void LabelRecord_Creat()
     }
 }
 
-static void ContAnimOpen(bool open)
+/**
+  * @brief  页面动画播放
+  * @param  open:是否为页面进入时的动画
+  * @retval 无
+  */
+static void PagePlayAnim(bool open)
 {
+    /*载入0~1，动画正放*/
+    /*退出1~0，动画倒放*/
     int step = open ? 0 : 1;
-
+                          
+    /*动画分两步*/
     int cnt = 2;
     while(cnt--)
     {
+        /*动画状态机*/
         switch(step)
         {
             case 0:
+                /*历史记录容器的Y轴移动动画*/
                 LV_OBJ_ADD_ANIM(
                     contRecord, y, 
                     open ? lv_obj_get_y(lmeterSec) + lv_obj_get_height(lmeterSec) + 20 : lv_obj_get_height(appWindow) + 20,
                     LV_ANIM_TIME_DEFAULT
                 );
+                /*历史记录容器的透明度变化动画*/
                 LV_OBJ_ADD_ANIM(
                     contRecord, opa_scale,
                     open ? LV_OPA_COVER : LV_OPA_TRANSP,
@@ -181,6 +228,7 @@ static void ContAnimOpen(bool open)
                 step = 1;
                 break;
             case 1:
+                /*秒线表透明度变化动画*/
                 LV_OBJ_ADD_ANIM(
                     lmeterSec, opa_scale,
                     open ? LV_OPA_COVER : LV_OPA_TRANSP,
@@ -189,28 +237,45 @@ static void ContAnimOpen(bool open)
                 step = 0;
                 break;
         }
+        /*页面延时，等待动画播放完成*/
         PageDelay(LV_ANIM_TIME_DEFAULT);
     }
 }
 
-/********* StopWatch *********/
+/*秒表状态*/
 typedef enum{
-    STATE_READY,
-    STATE_RUNNING,
-    STATE_PAUSE,
-    STATE_MAX
+    STATE_READY,     //就绪
+    STATE_RUNNING,   //运行中
+    STATE_PAUSE,     //暂停
 }SW_State_Type;
-static const char* SW_StateStr[STATE_MAX] = {
+
+/*秒表状态文字描述*/
+static const char* SW_StateStr[] = {
     "Ready",
     "Running",
     "Pause",
 };
+
+/*秒表状态*/
 static SW_State_Type SW_State = STATE_READY;
-static uint32_t SW_TickMs;
+
+/*秒表毫秒计数*/
+static uint32_t SW_TickMs = 0;
+
+/*历史记录索引*/
 static uint8_t  SW_RecordIndex = 0;
+
+/*历史记录*/
 static uint32_t  SW_RecordMs[SW_RECORD_MAX];
+
+/*秒表标签刷新任务句柄*/
 static lv_task_t * taskLabelUpdate;
 
+/**
+  * @brief  秒表标签刷新任务
+  * @param  task:任务句柄
+  * @retval 无
+  */
 static void SW_LabelUpdate(lv_task_t * task)
 {
     uint16_t hh = (SW_TickMs / (3600 * 1000)) % 100;
@@ -229,6 +294,11 @@ static void SW_LabelUpdate(lv_task_t * task)
     lv_label_set_text_fmt(labelMs, ".%03d", ms);
 }
 
+/**
+  * @brief  秒表历史记录更新
+  * @param  无
+  * @retval 无
+  */
 static void SW_RecordUpdate()
 {
     for(int i = 0; i < SW_RECORD_MAX; i++)
@@ -249,11 +319,21 @@ static void SW_RecordUpdate()
     }
 }
 
+/**
+  * @brief  秒表毫秒中断回调，被硬件定时器调用
+  * @param  无
+  * @retval 无
+  */
 static void SW_TimerCallback()
 {
     SW_TickMs++;
 }
 
+/**
+  * @brief  秒表初始化
+  * @param  无
+  * @retval 无
+  */
 static void SW_Init()
 {
     if(SW_State == STATE_READY)
@@ -264,11 +344,18 @@ static void SW_Init()
     {
         lv_label_set_static_text(labelTitle, SW_StateStr[SW_State]);
     }
+    /*刷新历史记录*/
     SW_RecordUpdate();
+    /*注册任务*/
     taskLabelUpdate = lv_task_create(SW_LabelUpdate, 11, LV_TASK_PRIO_HIGH, NULL);
     SW_LabelUpdate(taskLabelUpdate);
 }
 
+/**
+  * @brief  秒表启停控制
+  * @param  无
+  * @retval 无
+  */
 static void SW_StartStop()
 {
     if(SW_State == STATE_READY || SW_State == STATE_PAUSE)
@@ -285,6 +372,11 @@ static void SW_StartStop()
     lv_label_set_static_text(labelTitle, SW_StateStr[SW_State]);
 }
 
+/**
+  * @brief  秒表复位
+  * @param  无
+  * @retval 无
+  */
 static void SW_Reset()
 {
     if(SW_State == STATE_PAUSE)
@@ -301,6 +393,11 @@ static void SW_Reset()
     }
 }
 
+/**
+  * @brief  秒表记录
+  * @param  无
+  * @retval 无
+  */
 static void SW_Record()
 {
     if(SW_State == STATE_RUNNING)
@@ -330,7 +427,7 @@ static void Setup()
     ContRecord_Creat();
     LabelRecord_Creat();
     SW_Init();
-    ContAnimOpen(true);
+    PagePlayAnim(true);
 }
 
 /**
@@ -340,18 +437,18 @@ static void Setup()
   */
 static void Exit()
 {
-    ContAnimOpen(false);
+    PagePlayAnim(false);
     lv_task_del(taskLabelUpdate);
     lv_obj_clean(appWindow);
 }
 
 /**
   * @brief  页面事件
+  * @param  btn:发出事件的按键
   * @param  event:事件编号
-  * @param  param:事件参数
   * @retval 无
   */
-static void Event(int event, void* btn)
+static void Event(void* btn, int event)
 {
     if(btn == &btOK)
     {
@@ -389,6 +486,9 @@ static void Event(int event, void* btn)
   */
 void PageRegister_StopWatch(uint8_t pageID)
 {
+    /*获取分配给此页面的窗口*/
     appWindow = AppWindow_GetCont(pageID);
+    
+    /*注册至页面调度器*/
     page.PageRegister(pageID, Setup, NULL, Exit, Event);
 }

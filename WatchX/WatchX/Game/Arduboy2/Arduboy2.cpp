@@ -8,7 +8,7 @@
 #include "ab_logo.c"
 #include "glcdfont.c"
 #include "WMath.h"
-#include "APP/Game/GamePrivate.h"
+#include "Game/GamePrivate.h"
 
 #define power_timer0_disable()
 

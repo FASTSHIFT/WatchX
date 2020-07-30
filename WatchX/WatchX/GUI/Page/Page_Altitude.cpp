@@ -1,23 +1,44 @@
 #include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 
+/*此页面窗口*/
 static lv_obj_t * appWindow;
 
+/*标题栏*/
 static lv_obj_t * labelTitle;
+
+/*标题栏分隔线*/
 static lv_obj_t * lineTitle;
 
+/*气压显示容器*/
 static lv_obj_t * contKPaTemp;
+
+/*气压值标签*/
 static lv_obj_t * labelKPa;
+
+/*温度值标签*/
 static lv_obj_t * labelTemp;
 
+/*海拔图表*/
 static lv_obj_t * chartAlt;
+
+/*海拔图表折线*/
 static lv_chart_series_t * serAlt;
+
+/*海拔标签*/
 static lv_obj_t * labelAlt;
 
+/*海拔记录表更新任务句柄*/
 static lv_task_t * taskChartUpdate;
 
+/*当前页面公共的标签样式*/
 static lv_style_t style_label_public;
 
+/**
+  * @brief  创建标题栏
+  * @param  text:标题栏文本
+  * @retval 无
+  */
 static void Title_Creat(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
@@ -45,6 +66,11 @@ static void Title_Creat(const char * text)
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
+/**
+  * @brief  创建气压和温度容器
+  * @param  无
+  * @retval 无
+  */
 static void ContKPaTemp_Creat()
 {
     contKPaTemp = lv_cont_create(appWindow, NULL);
@@ -63,6 +89,11 @@ static void ContKPaTemp_Creat()
     lv_cont_set_style(contKPaTemp, LV_CONT_STYLE_MAIN, &style_cont);
 }
 
+/**
+  * @brief  创建气压和温度标签
+  * @param  无
+  * @retval 无
+  */
 static void LabelKPaTemp_Creat()
 {
     LV_IMG_DECLARE(ImgPressure);
@@ -105,6 +136,14 @@ static void LabelKPaTemp_Creat()
     lv_obj_set_auto_realign(labelTemp, true);
 }
 
+/**
+  * @brief  获取图表内的折线的最大值和最小值
+  * @param  chart:图表对象地址
+  * @param  series:折线对象地址
+  * @param  ymin:输出的最小值
+  * @param  ymax:输出的最大值
+  * @retval 无
+  */
 static void lv_chart_get_series_point_min_max(const lv_obj_t * chart, const lv_chart_series_t * series, lv_coord_t * ymin, lv_coord_t * ymax)
 {
     uint16_t cnt = lv_chart_get_point_cnt(chart);
@@ -122,6 +161,12 @@ static void lv_chart_get_series_point_min_max(const lv_obj_t * chart, const lv_c
     if(ymax != NULL)*ymax = max;
 }
 
+/**
+  * @brief  海拔图表自动量程设定
+  * @param  ymin:Y刻度最小值
+  * @param  ymax:Y刻度最大值
+  * @retval 无
+  */
 static void ChartAlt_AutoTickProcess(lv_coord_t ymin, lv_coord_t ymax)
 {
     static char tick_texts[50];
@@ -140,6 +185,11 @@ static void ChartAlt_AutoTickProcess(lv_coord_t ymin, lv_coord_t ymax)
     lv_chart_set_y_tick_texts(chartAlt, tick_texts, 2, LV_CHART_AXIS_DRAW_LAST_TICK);
 }
 
+/**
+  * @brief  海拔图表自动量程处理
+  * @param  无
+  * @retval 无
+  */
 static void ChartAlt_AutoRangeProcess()
 {
     lv_coord_t min, max;
@@ -150,6 +200,11 @@ static void ChartAlt_AutoRangeProcess()
     ChartAlt_AutoTickProcess(min * 10 - 20, max * 10 + 30);
 }
 
+/**
+  * @brief  海拔图表更新任务
+  * @param  task:任务句柄
+  * @retval 无
+  */
 static void Task_ChartUpdate(lv_task_t * task)
 {
     BMP_Update();
@@ -160,6 +215,11 @@ static void Task_ChartUpdate(lv_task_t * task)
     ChartAlt_AutoRangeProcess();
 }
 
+/**
+  * @brief  创建海拔图表
+  * @param  无
+  * @retval 无
+  */
 static void ChartAlt_Creat()
 {
     chartAlt = lv_chart_create(appWindow , NULL);
@@ -205,7 +265,12 @@ static void ChartAlt_Creat()
     lv_obj_set_opa_scale(labelAlt, LV_OPA_TRANSP);
 }
 
-static void PageAnimOpen(bool open)
+/**
+  * @brief  页面动画播放
+  * @param  open:是否为页面进入时的动画
+  * @retval 无
+  */
+static void PagePlayAnim(bool open)
 {
     int step = open ? 0 : 1;
     
@@ -258,7 +323,7 @@ static void Setup()
     
     taskChartUpdate = lv_task_create(Task_ChartUpdate, 1000, LV_TASK_PRIO_MID, NULL);
     Task_ChartUpdate(taskChartUpdate);
-    PageAnimOpen(true);
+    PagePlayAnim(true);
 }
 
 /**
@@ -268,18 +333,18 @@ static void Setup()
   */
 static void Exit()
 {
-    PageAnimOpen(false);
+    PagePlayAnim(false);
     lv_task_del(taskChartUpdate);
     lv_obj_clean(appWindow);
 }
 
 /**
   * @brief  页面事件
+  * @param  btn:发出事件的按键
   * @param  event:事件编号
-  * @param  param:事件参数
   * @retval 无
   */
-static void Event(int event, void* btn)
+static void Event(void* btn, int event)
 {
     if(btn == &btOK)
     {
@@ -307,6 +372,9 @@ static void Event(int event, void* btn)
   */
 void PageRegister_Altitude(uint8_t pageID)
 {
+    /*获取分配给此页面的窗口*/
     appWindow = AppWindow_GetCont(pageID);
+    
+    /*注册至页面调度器*/
     page.PageRegister(pageID, Setup, NULL, Exit, Event);
 }

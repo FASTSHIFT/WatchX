@@ -265,7 +265,7 @@ static void TimeConfigValueUpdate(int8_t dir = 0)
     }
 }
 
-static void ContAnimMove(bool down)
+static void PagePlayAnim(bool down)
 {
     int step = down ? 0 : 1;
 
@@ -324,7 +324,7 @@ static void Setup()
     LabelTimeDate_Creat();
     
     ContAnim_Creat();
-    ContAnimMove(true);
+    PagePlayAnim(true);
 }
 
 /**
@@ -334,17 +334,17 @@ static void Setup()
   */
 static void Exit()
 {
-    ContAnimMove(false);
+    PagePlayAnim(false);
     lv_obj_clean(appWindow);
 }
 
 /**
   * @brief  页面事件
+  * @param  btn:发出事件的按键
   * @param  event:事件编号
-  * @param  param:事件参数
   * @retval 无
   */
-static void Event(int event, void* btn)
+static void Event(void* btn, int event)
 {
     if(btn == &btOK)
     {
@@ -352,18 +352,8 @@ static void Event(int event, void* btn)
         {
             if(CfgSelIndex == 0 && CfgChanged)
             {
-                RTCx_SetTime(
-                    RTC_Time.RTC_Hours, 
-                    RTC_Time.RTC_Minutes, 
-                    RTC_Time.RTC_Seconds, 
-                    RTC_Time.RTC_H12
-                );
-                RTCx_SetDate(
-                    RTC_Date.RTC_Year, 
-                    RTC_Date.RTC_Month, 
-                    RTC_Date.RTC_Date, 
-                    RTC_Date.RTC_WeekDay
-                );
+                RTC_SetTime(RTC_Format_BIN, &RTC_Time);
+                RTC_SetDate(RTC_Format_BIN, &RTC_Date);
             }
             page.PagePop();
         }
@@ -394,6 +384,9 @@ static void Event(int event, void* btn)
   */
 void PageRegister_TimeCfg(uint8_t pageID)
 {
+    /*获取分配给此页面的窗口*/
     appWindow = AppWindow_GetCont(pageID);
+    
+    /*注册至页面调度器*/
     page.PageRegister(pageID, Setup, NULL, Exit, Event);
 }

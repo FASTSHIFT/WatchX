@@ -1,6 +1,32 @@
+/*
+ * MIT License
+ * Copyright (c) 2018-2020 _VIFEXTech
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the follo18wing conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 #include "PageManager.h"
 
 #define IS_PAGE(page)   ((page)<(MaxPage))
+
+#ifndef NULL
+#   define NULL 0
+#endif
 
 /**
   * @brief  初始化页面调度器
@@ -11,8 +37,8 @@
 PageManager::PageManager(uint8_t pageMax, uint8_t pageStackSize)
 {
     MaxPage = pageMax;
-    NewPage = 0;
-    OldPage = 0;
+    NewPage = NULL;
+    OldPage = NULL;
     IsPageBusy = false;
 
     /* 申请内存，清空列表 */
@@ -35,14 +61,8 @@ PageManager::PageManager(uint8_t pageMax, uint8_t pageStackSize)
   */
 PageManager::~PageManager()
 {
-    if(PageList)
-    {
-        delete[] PageList;
-    }
-    if(PageStack)
-    {
-        delete[] PageStack;
-    }
+    delete[] PageList;
+    delete[] PageStack;
 }
 
 /**
@@ -55,10 +75,10 @@ bool PageManager::PageClear(uint8_t pageID)
     if(!IS_PAGE(pageID))
         return false;
 
-    PageList[pageID].SetupCallback = 0;
-    PageList[pageID].LoopCallback = 0;
-    PageList[pageID].ExitCallback = 0;
-    PageList[pageID].EventCallback = 0;
+    PageList[pageID].SetupCallback = NULL;
+    PageList[pageID].LoopCallback = NULL;
+    PageList[pageID].ExitCallback = NULL;
+    PageList[pageID].EventCallback = NULL;
 
     return true;
 }
@@ -92,15 +112,15 @@ bool PageManager::PageRegister(
 
 /**
   * @brief  页面事件传递
-  * @param  eventID: 事件编号
-  * @param  param: 事件参数
+  * @param  obj: 发生事件的对象
+  * @param  event: 事件编号
   * @retval 无
   */
-void PageManager::PageEventTransmit(int event, void* param)
+void PageManager::PageEventTransmit(void* obj, int event)
 {
     /*将事件传递到当前页面*/
-    if(PageList[NowPage].EventCallback)
-        PageList[NowPage].EventCallback(event, param);
+    if(PageList[NowPage].EventCallback != NULL)
+        PageList[NowPage].EventCallback(obj, event);
 }
 
 /**
@@ -218,8 +238,8 @@ void PageManager::Running()
         /*标记为忙碌状态*/
         IsPageBusy = true;
 
-        /*执行旧页面的退出函数*/
-        if(PageList[OldPage].ExitCallback && IS_PAGE(OldPage))
+        /*触发旧页面退出事件*/
+        if(PageList[OldPage].ExitCallback != NULL && IS_PAGE(OldPage))
             PageList[OldPage].ExitCallback();
         
         /*标记旧页面*/
@@ -228,8 +248,8 @@ void PageManager::Running()
         /*标记新页面为当前页面*/
         NowPage = NewPage;
 
-        /*执行新页面初始化函数*/
-        if(PageList[NewPage].SetupCallback && IS_PAGE(NewPage))
+        /*触发新页面初始化事件*/
+        if(PageList[NewPage].SetupCallback != NULL && IS_PAGE(NewPage))
             PageList[NewPage].SetupCallback();
 
         /*新页面初始化完成，标记为旧页面*/
@@ -241,7 +261,7 @@ void PageManager::Running()
         IsPageBusy = false;
         
         /*页面循环事件*/
-        if(PageList[NowPage].LoopCallback && IS_PAGE(NowPage))
+        if(PageList[NowPage].LoopCallback != NULL && IS_PAGE(NowPage))
             PageList[NowPage].LoopCallback();
     }
 }

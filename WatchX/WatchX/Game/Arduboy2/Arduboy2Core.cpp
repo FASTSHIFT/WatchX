@@ -5,8 +5,7 @@
  */
 
 #include "Arduboy2Core.h"
-#include "APP/Game/GamePrivate.h"
-#include "Basic/TasksManage.h"
+#include "Game/GamePrivate.h"
 
 //#include <avr/wdt.h>
 
@@ -232,7 +231,8 @@ uint8_t Arduboy2Core::buttonsState()
 // delay in ms with 16 bit duration
 void Arduboy2Core::delayShort(uint16_t ms)
 {
-    vTaskDelay((unsigned long) ms);
+    //vTaskDelay((unsigned long) ms);
+    delay(ms);
 }
 
 void Arduboy2Core::exitToBootloader()

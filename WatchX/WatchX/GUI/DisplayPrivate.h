@@ -27,8 +27,8 @@ typedef enum
     /*保留*/
     PAGE_NONE,
     /*用户页面*/
-    PAGE_Home,
-    PAGE_Settings,
+    PAGE_DialPlate,
+    PAGE_MainMenu,
     PAGE_TimeCfg,
     PAGE_Backlight,
     PAGE_StopWatch,

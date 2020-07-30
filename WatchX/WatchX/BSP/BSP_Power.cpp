@@ -2,20 +2,22 @@
 #include "GUI/DisplayPrivate.h"
 #include "rtc.h"
 
+/*在进低功耗模式时，被配置为拉低的引脚*/
 static const uint8_t PinGrpLow[] =
 {
     TFT_CS_Pin,
     TFT_DC_Pin,
     TFT_RST_Pin,
-    TFT_LED_Pin,
+    TFT_BLK_Pin,
     
     LED_Pin,
 
     KEY_UP_Pin,
-//    KEY_OK_Pin,
+//    KEY_OK_Pin,   //使用OK键唤醒
     KEY_DOWN_Pin
 };
 
+/*在进低功耗模式时，被配置为浮空输入的引脚*/
 static const uint8_t PinGrpFloating[] =
 {
     IMU_SCL_Pin,
@@ -27,14 +29,25 @@ static const uint8_t PinGrpFloating[] =
     BAT_CHG_Pin
 };
 
+/**
+  * @brief  低功耗唤醒事件，被外部中断触发
+  * @param  无
+  * @retval 无
+  */
 static void Power_AwakeCallback()
 {
     digitalWrite(LED_Pin, HIGH);
-    NVIC_SystemReset();
+    NVIC_SystemReset();           //软件重启
 }
 
+/**
+  * @brief  进入低功耗模式
+  * @param  无
+  * @retval 无
+  */
 static void Power_EnterLowPowerMode()
 {
+    /*遍历引脚，配置模式*/
     for(uint8_t i = 0; i < sizeof(PinGrpLow); i++)
     {
         pinMode(PinGrpLow[i], OUTPUT);
@@ -44,6 +57,8 @@ static void Power_EnterLowPowerMode()
     {
         pinMode(PinGrpFloating[i], INPUT);
     }
+    
+    /*关外设*/
     ADC_Cmd(ADC1, DISABLE);
     ADC_Cmd(ADC2, DISABLE);
     DMA_Cmd(DMA2_Stream0, DISABLE);
@@ -52,23 +67,37 @@ static void Power_EnterLowPowerMode()
     TIM_Cmd(TIM3, DISABLE);
     TIM_Cmd(TIM4, DISABLE);
     
-    while (digitalRead(POWER_EN_Pin)) __NOP();//等待松开电源键
+    /*等待松开电源键*/
+    while (digitalRead(POWER_EN_Pin)) __NOP();
     digitalWrite(POWER_ON_Pin, LOW);
 
+    /*注册外部中断回调*/
     attachInterrupt(KEY_OK_Pin, Power_AwakeCallback, FALLING);
+    
+    /*进STOP模式*/
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
     PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFI);
     while(1);
 }
 
+/*上一次操作时间(ms)*/
 static uint32_t Power_LastHandleTime = 0;
+
+/*自动关机时间(秒)*/
 static uint16_t Power_AutoLowPowerTimeout = 60;
+
+/*自动关机功能使能*/
 static bool Power_AutoLowPowerEnable = true;
 
+/**
+  * @brief  从后备寄存器获取自动关机时间
+  * @param  无
+  * @retval 时间(秒)
+  */
 static uint32_t Power_GetBKP()
 {
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);   //使能PWR和BKP外设时钟
-    PWR_BackupAccessCmd(ENABLE);  //使能后备寄存器访问
+    PWR_BackupAccessCmd(ENABLE);                          //使能后备寄存器访问
     
     uint16_t value = RTC_ReadBackupRegister(RTC_BKP_DR3);
     
@@ -80,6 +109,11 @@ static uint32_t Power_GetBKP()
     return value;
 }
 
+/**
+  * @brief  将当前自动关机时间更新至后备寄存器
+  * @param  无
+  * @retval 无
+  */
 static void Power_UpdateBKP()
 {
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);   //使能PWR和BKP外设时钟
@@ -89,33 +123,63 @@ static void Power_UpdateBKP()
     RTC_WaitForSynchro();   //等待最近一次对RTC寄存器的写操作完成
 }
 
+/**
+  * @brief  电源初始化
+  * @param  无
+  * @retval 无
+  */
 void Power_Init()
 {
     Power_SetAutoLowPowerTimeout(Power_GetBKP());
     Power_HandleTimeUpdate();
 }
 
+/**
+  * @brief  更新操作时间
+  * @param  无
+  * @retval 无
+  */
 void Power_HandleTimeUpdate()
 {
     Power_LastHandleTime = millis();
 }
 
-void Power_SetAutoLowPowerTimeout(uint16_t ms)
+/**
+  * @brief  设置自动关机时间
+  * @param  sec:时间(秒)
+  * @retval 无
+  */
+void Power_SetAutoLowPowerTimeout(uint16_t sec)
 {
-    Power_AutoLowPowerTimeout = ms;
+    Power_AutoLowPowerTimeout = sec;
 }
 
+/**
+  * @brief  获取自动关机时间
+  * @param  无
+  * @retval sec:时间(秒)
+  */
 uint16_t Power_GetAutoLowPowerTimeout()
 {
     return Power_AutoLowPowerTimeout;
 }
 
+/**
+  * @brief  设置自动关机功能使能
+  * @param  en:使能
+  * @retval 无
+  */
 void Power_SetAutoLowPowerEnable(bool en)
 {
     Power_AutoLowPowerEnable = en;
     Power_HandleTimeUpdate();
 }
 
+/**
+  * @brief  执行关机
+  * @param  无
+  * @retval 无
+  */
 void Power_Shutdown()
 {
     Backlight_UpdateBKP();
@@ -125,6 +189,11 @@ void Power_Shutdown()
     Power_EnterLowPowerMode();
 }
 
+/**
+  * @brief  自动关机监控
+  * @param  无
+  * @retval 无
+  */
 void Power_AutoShutdownUpdate()
 {
     if(!Power_AutoLowPowerEnable)

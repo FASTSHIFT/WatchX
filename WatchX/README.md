@@ -40,3 +40,11 @@
 * 4.添加自动待机时间设置以及掉电保存支持
 * 5.感谢"日天电子工作室"提出的改进建议
 * 6.修改了一些函数的命名
+
+## [v0.9] - 2020-07-30
+* 1.更新MillisTaskManager库，无需手动指定ID
+* 2.TFT_BLK_Pin 更名为 TFT_BLK_Pin
+* 3.添加部分注释
+* 4.Home更名为DiolPlate(表盘)页面，Settings更名为MainMenu页面
+* 5.更新PageManager v1.4
+* 6.添加Arduboy2

@@ -1,8 +1,13 @@
 #include "GUI/DisplayPrivate.h"
 #include "Basic/SysConfig.h"
 
+/*屏幕驱动结构体地址*/
 static lv_disp_drv_t * disp_drv_p;
+
+/*屏幕缓冲区信息*/
 static lv_disp_buf_t disp_buf;
+
+/*乒乓缓冲区，缓冲20行像素*/
 static lv_color_t lv_disp_buf1[LV_HOR_RES_MAX * 20];
 static lv_color_t lv_disp_buf2[LV_HOR_RES_MAX * 20];
 
@@ -15,10 +20,15 @@ static void log_print(lv_log_level_t level, const char * file, uint32_t line, co
 }
 #endif
 
+/**
+  * @brief  使用DMA发送缓冲区数据
+  * @param  buf:缓冲区地址
+  * @param  size:缓冲区长度
+  * @retval 无
+  */
 static void disp_spi_dma_send(void* buf, uint32_t size)
 {
     DMA_Cmd(DMA2_Stream3, DISABLE);                      //关闭DMA传输
-    //while (DMA_GetCmdStatus(DMA2_Stream3) != DISABLE); //确保DMA可以被设置
     DMA2_Stream3->M0AR = (uint32_t)buf;
     DMA2_Stream3->NDTR = size;
     DMA_Cmd(DMA2_Stream3, ENABLE);                      //开启DMA传输
@@ -27,21 +37,32 @@ static void disp_spi_dma_send(void* buf, uint32_t size)
 //    DMA_ClearFlag(DMA2_Stream3, DMA_FLAG_TCIF3); // 清除标志
 }
 
-/* Display flushing */
+/**
+  * @brief  屏幕刷新回调函数
+  * @param  disp:屏幕驱动地址
+  * @param  area:刷新区域
+  * @param  color_p:刷新缓冲区地址
+  * @retval 无
+  */
 static void disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
     disp_drv_p = disp;
+    
     //screen.drawFastRGBBitmap(area->x1, area->y1, (uint16_t*)color_p, (area->x2 - area->x1 + 1), (area->y2 - area->y1 + 1));
+    
     int16_t w = (area->x2 - area->x1 + 1);
     int16_t h = (area->y2 - area->y1 + 1);
     uint32_t size = w * h * 2;
     
+    /*设置刷新区域*/
     screen.setAddrWindow(area->x1, area->y1, area->x2, area->y2);
     
+    /*片选，数据模式*/
     digitalWrite_LOW(TFT_CS_Pin);
     digitalWrite_HIGH(TFT_DC_Pin);
     
-    disp_spi_dma_send((void*)color_p, size);
+    /*DMA发送请求*/
+    disp_spi_dma_send(color_p, size);
     
 //    digitalWrite_HIGH(TFT_CS_Pin);
 //    lv_disp_flush_ready(disp_drv_p);/* tell lvgl that flushing is done */
@@ -50,6 +71,7 @@ static void disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *c
 extern "C" {
 void DMA2_Stream3_IRQHandler(void)
 {
+    /*DMA发送完成中断*/
     if(DMA_GetITStatus(DMA2_Stream3, DMA_IT_TCIF3) != RESET)
     {
         digitalWrite_HIGH(TFT_CS_Pin);
@@ -59,6 +81,11 @@ void DMA2_Stream3_IRQHandler(void)
 }
 }
 
+/**
+  * @brief  DMA初始化
+  * @param  无
+  * @retval 无
+  */
 static void lv_disp_spi_dma_init()
 {
     DMA_InitTypeDef  DMA_InitStructure;
@@ -84,19 +111,17 @@ static void lv_disp_spi_dma_init()
     DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;//外设突发单次传输
     DMA_Init(DMA2_Stream3, &DMA_InitStructure);//初始化DMA Stream
         
-    SPI_I2S_DMACmd(SPI1, SPI_I2S_DMAReq_Tx, ENABLE); // 使能DMA发送
-        
-//    NVIC_InitTypeDef NVIC_InitStructure;
-//    NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream3_IRQn;
-//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-//    NVIC_Init(&NVIC_InitStructure);
+    SPI_I2S_DMACmd(SPI1, SPI_I2S_DMAReq_Tx, ENABLE); // SPI1使能DMA发送
     
     NVIC_EnableIRQ(DMA2_Stream3_IRQn);
     DMA_ITConfig(DMA2_Stream3, DMA_IT_TC, ENABLE);
 }
 
+/**
+  * @brief  屏幕初始化
+  * @param  无
+  * @retval 无
+  */
 void lv_port_disp_init()
 {
     lv_init();

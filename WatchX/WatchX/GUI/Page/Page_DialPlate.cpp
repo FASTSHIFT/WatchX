@@ -1,30 +1,54 @@
 #include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 
+/*RTC时间*/
 static RTC_TimeTypeDef RTC_Time;
 static RTC_TimeTypeDef RTC_TimeLast;
 static RTC_DateTypeDef RTC_Date;
 
+/*此页面窗口*/
 static lv_obj_t * appWindow;
+
+/*背景图片*/
 static lv_obj_t * imgBg;
 
+/*气压计信息*/
 static lv_obj_t * labelBMP;
+
+/*电池信息*/
 static lv_obj_t * labelBatt;
 
+/*时间信息*/
 static lv_obj_t * labelDate;
 
+/*时间容器*/
 static lv_obj_t * contTime;
+
+/*秒指示灯LED*/
 static lv_obj_t * ledSec[2];
+
+/*时间标签1、2，交替使用实现上下滑动效果*/
 static lv_obj_t * labelTime_Grp[4];
 static lv_obj_t * labelTime_Grp2[4];
 
+/*运动图标*/
 static lv_obj_t * imgRun;
+
+/*计步次数标签*/
 static lv_obj_t * labelStepCnt;
 
+/*时间更新任务句柄*/
 static lv_task_t * taskTimeUpdate;
+
+/*状态栏更新任务句柄*/
 static lv_task_t * taskTopBarUpdate;
 
-static void ImgBg_Creat(void)
+/**
+  * @brief  创建背景图
+  * @param  无
+  * @retval 无
+  */
+static void ImgBg_Creat()
 {
     LV_IMG_DECLARE(ImgBg);
     imgBg = lv_img_create(appWindow, NULL);
@@ -32,14 +56,24 @@ static void ImgBg_Creat(void)
     lv_obj_align(imgBg, NULL, LV_ALIGN_CENTER, 0, 0);
 }
 
+/**
+  * @brief  状态栏更新
+  * @param  task:任务句柄
+  * @retval 无
+  */
 static void Task_TopBarUpdate(lv_task_t * task)
 {
+    /*气压计状态更新*/
     BMP_Update();
     lv_label_set_text_fmt(labelBMP, "% 2dC"LV_SYMBOL_DEGREE_SIGN" %dm", (int)BMP180.temperature, (int)BMP180.altitude);
     
+    /*读取电池电压*/
     float battVoltage = (float)analogRead_DMA(BAT_DET_Pin) / 4095.0f * 3.3f * 2;
+    
+    /*是否充电*/
     bool Is_BattCharging = !digitalRead(BAT_CHG_Pin);
 
+    /*电池图标组*/
     const char * battSymbol[] =
     {
         LV_SYMBOL_BATTERY_EMPTY,
@@ -49,6 +83,7 @@ static void Task_TopBarUpdate(lv_task_t * task)
         LV_SYMBOL_BATTERY_FULL
     };
     
+    /*电压映射到图标索引*/
     int symIndex = fmap(
         battVoltage, 
         2.8f, 4.2f, 
@@ -58,6 +93,7 @@ static void Task_TopBarUpdate(lv_task_t * task)
     
     if(Is_BattCharging)
     {
+        /*充电动画效果*/
         static uint8_t usage = 0;
         usage++;
         usage %= (symIndex + 1);
@@ -67,6 +103,11 @@ static void Task_TopBarUpdate(lv_task_t * task)
     lv_label_set_text_fmt(labelBatt, "#FFFFFF %s#", battSymbol[symIndex]);
 }
 
+/**
+  * @brief  创建状态栏
+  * @param  无
+  * @retval 无
+  */
 static void LabelTopBar_Creat()
 {
     LV_FONT_DECLARE(HandGotn_14);
@@ -90,12 +131,22 @@ static void LabelTopBar_Creat()
     Task_TopBarUpdate(taskTopBarUpdate);
 }
 
+/**
+  * @brief  滑动改变时间标签
+  * @param  val_now:当前值
+  * @param  val_last:上一次的值
+  * @param  index:标签索引
+  * @retval 无
+  */
 #define LABEL_TIME_CHECK_DEF(val_now,val_last,index)\
 do{\
+    /*当前值发生改变时*/\
     if((val_now) != (val_last))\
     {\
+        /*标签对象*/\
         lv_obj_t * next_label;\
         lv_obj_t * now_label;\
+        /*判断两个标签的相对位置，确定谁是下一个标签*/\
         if(lv_obj_get_y(labelTime_Grp2[index]) > lv_obj_get_y(labelTime_Grp[index]))\
         {\
             now_label = labelTime_Grp[index];\
@@ -109,16 +160,24 @@ do{\
         \
         lv_label_set_text_fmt(now_label, "%d", (val_last));\
         lv_label_set_text_fmt(next_label, "%d", (val_now));\
-        \
+        /*对齐*/\
         lv_obj_align(next_label, now_label, LV_ALIGN_OUT_TOP_MID, 0, -10);\
+        /*计算需要的Y偏移量*/\
         lv_coord_t y_offset = abs(lv_obj_get_y(now_label) - lv_obj_get_y(next_label));\
+        /*滑动动画*/\
         LV_OBJ_ADD_ANIM(now_label, y, lv_obj_get_y(now_label) + y_offset, LV_ANIM_TIME_DEFAULT);\
         LV_OBJ_ADD_ANIM(next_label, y, lv_obj_get_y(next_label) + y_offset, LV_ANIM_TIME_DEFAULT);\
     }\
 }while(0)
 
+/**
+  * @brief  时间标签更新
+  * @param  无
+  * @retval 无
+  */
 static void LabelTimeGrp_Update()
 {
+    /*获取RTC时间*/
     RTC_GetTime(RTC_Format_BIN, &RTC_Time);
 //    RTC_Time.RTC_Hours = (millis() / (3600 * 1000)) % 100;
 //    RTC_Time.RTC_Minutes = (millis() / (60 * 1000)) % 60;
@@ -142,10 +201,17 @@ static void LabelTimeGrp_Update()
     RTC_TimeLast = RTC_Time;
 }
 
+/**
+  * @brief  时间更新任务
+  * @param  task:任务句柄
+  * @retval 无
+  */
 static void Task_TimeUpdate(lv_task_t * task)
 {
+    /*时间标签状态更新*/
     LabelTimeGrp_Update();
     
+    /*翻转LED状态*/
     lv_led_toggle(ledSec[0]);
     lv_led_toggle(ledSec[1]);
     
@@ -157,6 +223,11 @@ static void Task_TimeUpdate(lv_task_t * task)
     lv_label_set_text_fmt(labelDate, "%02d#FF0000 /#%02d %s", RTC_Date.RTC_Month, RTC_Date.RTC_Date, week_str[index]);
 }
 
+/**
+  * @brief  创建日期标签
+  * @param  无
+  * @retval 无
+  */
 static void LabelDate_Creat()
 {
     LV_FONT_DECLARE(Morganite_36);
@@ -174,6 +245,11 @@ static void LabelDate_Creat()
     lv_obj_set_auto_realign(labelDate, true);
 }
 
+/**
+  * @brief  创建时间标签
+  * @param  无
+  * @retval 无
+  */
 static void LabelTime_Creat()
 {
     LabelDate_Creat();
@@ -222,11 +298,19 @@ static void LabelTime_Creat()
         labelTime_Grp2[i] = label;
     }
 
+    /*时间清零*/
     memset(&RTC_TimeLast, 0, sizeof(RTC_TimeLast));
+    
+    /*注册时间标签更新任务，执行周期500ms*/
     taskTimeUpdate = lv_task_create(Task_TimeUpdate, 500, LV_TASK_PRIO_MID, NULL);
     Task_TimeUpdate(taskTimeUpdate);
 }
 
+/**
+  * @brief  创建计步标签
+  * @param  无
+  * @retval 无
+  */
 static void LabelStep_Creat()
 {
     LV_IMG_DECLARE(ImgRun);
@@ -245,6 +329,7 @@ static void LabelStep_Creat()
     lv_label_set_style(labelStepCnt, LV_LABEL_STYLE_MAIN, &step_style);
     
     lv_label_set_recolor(labelStepCnt, true);
+    /*懒得做计步，先随便写个值*/
     lv_label_set_text(labelStepCnt, "#FF0000 /# 1255");
     lv_obj_align(labelStepCnt, imgRun, LV_ALIGN_OUT_RIGHT_MID, 0, 0);
     lv_obj_set_auto_realign(labelStepCnt, true);
@@ -268,10 +353,6 @@ static void Setup()
     Power_SetAutoLowPowerEnable(true);
 }
 
-static void Loop()
-{
-}
-
 /**
   * @brief  页面退出事件
   * @param  无
@@ -279,24 +360,30 @@ static void Loop()
   */
 static void Exit()
 {
+    /*关任务*/
     lv_task_del(taskTimeUpdate);
     lv_task_del(taskTopBarUpdate);
+    
+    /*删除此页面上的子控件*/
     lv_obj_clean(appWindow);
     
+    /*禁用自动关机*/
     Power_SetAutoLowPowerEnable(false);
 }
 
 /**
   * @brief  页面事件
+  * @param  btn:发出事件的按键
   * @param  event:事件编号
-  * @param  param:事件参数
   * @retval 无
   */
-static void Event(int event, void* btn)
+static void Event(void* btn, int event)
 {
+    /*当有按键点击或长按时*/
     if(event == ButtonEvent::EVENT_ButtonClick || event == ButtonEvent::EVENT_ButtonLongPressed)
     {
-        page.PagePush(PAGE_Settings);
+        /*进入主菜单*/
+        page.PagePush(PAGE_MainMenu);
     }
 }
 
@@ -305,8 +392,11 @@ static void Event(int event, void* btn)
   * @param  pageID:为此页面分配的ID号
   * @retval 无
   */
-void PageRegister_Home(uint8_t pageID)
+void PageRegister_DialPlate(uint8_t pageID)
 {
+    /*获取分配给此页面的窗口*/
     appWindow = AppWindow_GetCont(pageID);
-    page.PageRegister(pageID, Setup, Loop, Exit, Event);
+    
+    /*注册至页面调度器*/
+    page.PageRegister(pageID, Setup, NULL, Exit, Event);
 }

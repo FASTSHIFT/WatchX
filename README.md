@@ -23,7 +23,8 @@
 * 6.亮度控制
 * 7.时间设置
 * 8.[Arduboy](https://github.com/Arduboy/Arduboy)/[Arduboy2](https://github.com/MLXXXp/Arduboy2) Game System
-* 9.待续..
+* 9.自动关机(5-300sec)
+* 10.待续...
 
 ## 成品展示
 ![image](https://github.com/FASTSHIFT/WatchX/blob/master/Images/Main.jpg)
