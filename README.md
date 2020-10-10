@@ -4,7 +4,7 @@
 演示视频：https://www.bilibili.com/video/BV1AK4y1b7Xd
 
 ## UI框架
-> [LittlevGL V6.1.2](https://github.com/littlevgl/lvgl)
+> [LittlevGL V6.1.2](https://github.com/lvgl/lvgl/releases/tag/v6.1.2)
 
 ## 硬件配置
 * 1.主控: STM32F411CEU6 (主频:100MHz RAM:128KB ROM:512KB)
