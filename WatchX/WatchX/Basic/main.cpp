@@ -2,16 +2,16 @@
 #include "GUI/DisplayPrivate.h"
 #include "MillisTaskManager/MillisTaskManager.h"
 
-/*ÈÎÎñµ÷¶ÈÆ÷*/
+/*ä»»åŠ¡è°ƒåº¦å™¨*/
 static MillisTaskManager mtmMain;
 
-/*CPUÕ¼ÓÃÂÊ(DEBUGÓÃ)*/
+/*CPUå ç”¨ç‡(DEBUGç”¨)*/
 float CPU_Usage;
 
 /**
-  * @brief  CPUÕ¼ÓÃÂÊ¸üĞÂ
-  * @param  ÎŞ
-  * @retval ÎŞ
+  * @brief  CPUå ç”¨ç‡æ›´æ–°
+  * @param  æ— 
+  * @retval æ— 
   */
 static void CPU_UsageUpdate()
 {
@@ -19,9 +19,9 @@ static void CPU_UsageUpdate()
 }
 
 /**
-  * @brief  ÏµÍ³³õÊ¼»¯
-  * @param  ÎŞ
-  * @retval ÎŞ
+  * @brief  ç³»ç»Ÿåˆå§‹åŒ–
+  * @param  æ— 
+  * @retval æ— 
   */
 static void setup()
 {
@@ -29,17 +29,17 @@ static void setup()
     pinMode(LED_Pin, OUTPUT);
     digitalWrite(LED_Pin, HIGH);
     
-    /*µçÔ´±£³Ö*/
+    /*ç”µæºä¿æŒ*/
     pinMode(POWER_ON_Pin, OUTPUT);
     digitalWrite(POWER_ON_Pin, HIGH);
     
-    /*µçÔ´°´¼ü*/
-    pinMode(POWER_EN_Pin, INPUT);
+    /*ç”µæºæŒ‰é”®*/
+    pinMode(POWER_EN_Pin, INPUT_PULLDOWN);
     
-    /*µç³Ø³äµç¼ì²â*/
+    /*ç”µæ± å……ç”µæ£€æµ‹*/
     pinMode(BAT_CHG_Pin, INPUT_PULLUP);
 
-    /*Éè±¸³õÊ¼»¯*/
+    /*è®¾å¤‡åˆå§‹åŒ–*/
     RTCx_Init();
     Power_Init();
     Backlight_Init();
@@ -47,23 +47,23 @@ static void setup()
     Display_Init();
     BMP_Init();
     
-    /*µç³ØµçÑ¹¼ì²â*/
+    /*ç”µæ± ç”µå‹æ£€æµ‹*/
     pinMode(BAT_DET_Pin, INPUT_ANALOG_DMA);
     ADC_DMA_Init();
 
     digitalWrite(LED_Pin, LOW);
 
-    /*ÈÎÎñ×¢²á*/
-    mtmMain.Register(Display_Update, 1);                //ÆÁÄ»Ë¢ĞÂ
-    mtmMain.Register(Button_Update, 10);                //°´¼üÊÂ¼ş¼à¿Ø
-    mtmMain.Register(Power_AutoShutdownUpdate, 100);    //×Ô¶¯¹Ø»ú¼à¿Ø
-    mtmMain.Register(CPU_UsageUpdate, 1000);            //CPUÕ¼ÓÃÂÊ¼à¿Ø
+    /*ä»»åŠ¡æ³¨å†Œ*/
+    mtmMain.Register(Display_Update, 1);                //å±å¹•åˆ·æ–°
+    mtmMain.Register(Button_Update, 10);                //æŒ‰é”®äº‹ä»¶ç›‘æ§
+    mtmMain.Register(Power_AutoShutdownUpdate, 100);    //è‡ªåŠ¨å…³æœºç›‘æ§
+    mtmMain.Register(CPU_UsageUpdate, 1000);            //CPUå ç”¨ç‡ç›‘æ§
 }
 
 /**
-  * @brief  ÏµÍ³Ö÷Ñ­»·
-  * @param  ÎŞ
-  * @retval ÎŞ
+  * @brief  ç³»ç»Ÿä¸»å¾ªç¯
+  * @param  æ— 
+  * @retval æ— 
   */
 static void loop()
 {
