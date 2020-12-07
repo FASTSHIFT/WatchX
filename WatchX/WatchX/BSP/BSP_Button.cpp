@@ -1,4 +1,3 @@
-#include "Basic/FileGroup.h"
 #include "BSP.h"
 #include "GUI/DisplayPrivate.h"
 

@@ -1,4 +1,3 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 #include "GamePrivate.h"
 #include "BSP/BSP.h"
@@ -19,7 +18,7 @@ static void Task_GameScreenUpdate(lv_task_t * task)
     Game_DispTaskUpdate();
 }
 
-static void ContGameDisp_Creat()
+static void ContGameDisp_Create()
 {
     contGameDisp = lv_cont_create(appWindow, NULL);
     lv_obj_set_size(contGameDisp, 128 + 4, 64 + 4);
@@ -32,7 +31,7 @@ void Game_DispGetContPos(int16_t* x, int16_t* y)
     *y = lv_obj_get_y(contGameDisp) + 2;
 }
 
-static void LED_Creat()
+static void LED_Create()
 {
     /*Create a style for the LED*/
     static lv_style_t style_led[GAME_LED_MAX];
@@ -88,8 +87,8 @@ static void Setup()
     
     Game_Begin();
     
-    ContGameDisp_Creat();
-    LED_Creat();
+    ContGameDisp_Create();
+    LED_Create();
     
     int16_t x,y;
     Game_DispGetContPos(&x, &y);

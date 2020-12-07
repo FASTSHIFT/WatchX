@@ -3,7 +3,7 @@
 
 #define WX_NAME             "WatchX"     //手表名称
 #define WX_HARDWARE_VERSION "v2.0"       //硬件版本
-#define WX_SOFTWARE_VERSION "v0.9"       //软件版本
+#define WX_SOFTWARE_VERSION "v1.0"       //软件版本
 
 /*屏幕*/
 #define TFT_CS_Pin  PA4     //片选

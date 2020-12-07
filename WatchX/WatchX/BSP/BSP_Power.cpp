@@ -130,6 +130,19 @@ static void Power_UpdateBKP()
   */
 void Power_Init()
 {
+    /*电源保持*/
+    pinMode(POWER_ON_Pin, OUTPUT);
+    digitalWrite(POWER_ON_Pin, HIGH);
+    
+    /*电源按键*/
+    pinMode(POWER_EN_Pin, INPUT_PULLDOWN);
+    
+    /*电池充电检测*/
+    pinMode(BAT_CHG_Pin, INPUT_PULLUP);
+    
+    /*电池电压检测*/
+    pinMode(BAT_DET_Pin, INPUT_ANALOG_DMA);
+    
     Power_SetAutoLowPowerTimeout(Power_GetBKP());
     Power_HandleTimeUpdate();
 }

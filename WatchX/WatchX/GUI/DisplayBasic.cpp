@@ -1,4 +1,3 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 #include "BSP/BSP.h"
 
@@ -53,11 +52,12 @@ void Display_Init()
     DisplayError_Init();
     
     /*lvgl初始化*/
+    lv_init();
     lv_port_disp_init();
     lv_theme_set_current(lv_theme_night_init(200, NULL));
     
     /*APP窗口初始化*/
-    AppWindow_Creat();
+    AppWindow_Create();
     
     /*页面初始化*/
     Pages_Init();

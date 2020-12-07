@@ -1,5 +1,6 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
+#include "Basic/CommonMacro.h"
+#include "BSP/BSP.h"
 
 /*此页面窗口*/
 static lv_obj_t * appWindow;
@@ -57,7 +58,7 @@ static int8_t ICON_NowSelIndex = 0;
   * @param  无
   * @retval 无
   */
-static void ICON_Grp_Creat()
+static void ICON_Grp_Create()
 {
     contDisp = lv_cont_create(appWindow, NULL);
     lv_cont_set_style(contDisp, LV_CONT_STYLE_MAIN, &lv_style_transp);
@@ -103,7 +104,7 @@ static void ICON_Grp_Creat()
   * @param  无
   * @retval 无
   */
-static void Title_Creat()
+static void Title_Create()
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -136,7 +137,7 @@ static void Title_Creat()
   * @param  iconIndex:目标图标的索引
   * @retval 无
   */
-static void ICON_Grp_MoveFouce(uint8_t iconIndex)
+static void ICON_Grp_MoveFocus(uint8_t iconIndex)
 {
     if(iconIndex > ICON_MAX_INDEX)
         return;
@@ -162,7 +163,7 @@ static void ICON_Grp_Move(int8_t dir)
     __ValuePlus(ICON_NowSelIndex, dir, 0, ICON_MAX_INDEX);
     
     /*移动到新图标*/
-    ICON_Grp_MoveFouce(ICON_NowSelIndex);
+    ICON_Grp_MoveFocus(ICON_NowSelIndex);
 }
 
 /**
@@ -170,7 +171,7 @@ static void ICON_Grp_Move(int8_t dir)
   * @param  无
   * @retval 无
   */
-static void ImgShadow_Creat()
+static void ImgShadow_Create()
 {
     LV_IMG_DECLARE(ImgShadowUp);
     LV_IMG_DECLARE(ImgShadowDown);
@@ -193,12 +194,12 @@ static void Setup()
 {
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
-    Title_Creat();
-    ICON_Grp_Creat();
-    ImgShadow_Creat();
+    Title_Create();
+    ICON_Grp_Create();
+    ImgShadow_Create();
     
     /*图标滑到上一次选中的图标*/
-    ICON_Grp_MoveFouce(ICON_NowSelIndex);
+    ICON_Grp_MoveFocus(ICON_NowSelIndex);
 }
 
 /**

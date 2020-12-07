@@ -1,5 +1,6 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
+#include "Basic/CommonMacro.h"
+#include "BSP/BSP.h"
 
 static lv_obj_t * appWindow;
 
@@ -13,7 +14,7 @@ static lv_obj_t * imgArt;
 static lv_obj_t * labelDesigner;
 static lv_obj_t * labelFwInfo;
 
-static void Title_Creat(const char * text)
+static void Title_Create(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -40,7 +41,7 @@ static void Title_Creat(const char * text)
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
-static void Img_Creat()
+static void Img_Create()
 {
     LV_IMG_DECLARE(ImgWatchX);
     LV_IMG_DECLARE(ImgVIFEXTech);
@@ -61,7 +62,7 @@ static void Img_Creat()
     lv_obj_align(imgArt, imgProg, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 }
 
-static void LabelInfo_Creat()
+static void LabelInfo_Create()
 {
     LV_FONT_DECLARE(HandGotn_14);
     labelDesigner = lv_label_create(appWindow, NULL);
@@ -150,10 +151,10 @@ static void Setup()
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
     
-    Title_Creat("About");
-    Img_Creat();
-    LabelInfo_Creat();
-    LabelInfo_Creat();
+    Title_Create("About");
+    Img_Create();
+    LabelInfo_Create();
+    LabelInfo_Create();
     PageAnimOpen(true);
 }
 

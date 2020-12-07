@@ -42,12 +42,14 @@ void TIMx_OCxInit(TIM_TypeDef* TIMx, uint16_t arr, uint16_t psc, uint8_t TimerCh
     
     Timer_ClockCmd(TIMx, ENABLE);
 
+    TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
     TIM_TimeBaseStructure.TIM_Period = arr;
     TIM_TimeBaseStructure.TIM_Prescaler = psc;
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     TIM_TimeBaseInit(TIMx, &TIM_TimeBaseStructure);
 
+    TIM_OCStructInit(&TIM_OCInitStructure);
     TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM2;
     TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_Low;
@@ -72,11 +74,7 @@ void TIMx_OCxInit(TIM_TypeDef* TIMx, uint16_t arr, uint16_t psc, uint8_t TimerCh
     }
 
     TIM_Cmd(TIMx, ENABLE);
-    
-    if(IS_APB2_TIM(TIMx))
-    {
-        TIM_CtrlPWMOutputs(TIMx, ENABLE);
-    }
+    TIM_CtrlPWMOutputs(TIMx, ENABLE);
 }
 
 /**

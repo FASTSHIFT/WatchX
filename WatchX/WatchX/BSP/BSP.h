@@ -35,4 +35,8 @@ uint16_t Power_GetAutoLowPowerTimeout();
 void Power_SetAutoLowPowerEnable(bool en);
 void Power_AutoShutdownUpdate();
 
+/*LED*/
+void LED_Init();
+void LED_SetEnable(bool en);
+
 #endif

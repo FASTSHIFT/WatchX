@@ -1,5 +1,6 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
+#include "Basic/CommonMacro.h"
+#include "BSP/BSP.h"
 
 /*此页面窗口*/
 static lv_obj_t * appWindow;
@@ -39,7 +40,7 @@ static lv_style_t style_label_public;
   * @param  text:标题栏文本
   * @retval 无
   */
-static void Title_Creat(const char * text)
+static void Title_Create(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -71,7 +72,7 @@ static void Title_Creat(const char * text)
   * @param  无
   * @retval 无
   */
-static void ContKPaTemp_Creat()
+static void ContKPaTemp_Create()
 {
     contKPaTemp = lv_cont_create(appWindow, NULL);
     lv_obj_set_size(contKPaTemp, 130, 58);
@@ -94,7 +95,7 @@ static void ContKPaTemp_Creat()
   * @param  无
   * @retval 无
   */
-static void LabelKPaTemp_Creat()
+static void LabelKPaTemp_Create()
 {
     LV_IMG_DECLARE(ImgPressure);
     lv_obj_t * imgP = lv_img_create(contKPaTemp, NULL);
@@ -194,10 +195,31 @@ static void ChartAlt_AutoRangeProcess()
 {
     lv_coord_t min, max;
     lv_chart_get_series_point_min_max(chartAlt, serAlt, &min, &max);
-    min /= 10;
-    max /= 10;
-    lv_chart_set_range(chartAlt, min * 10 - 10, max * 10 + 10);
-    ChartAlt_AutoTickProcess(min * 10 - 20, max * 10 + 30);
+    
+    lv_coord_t diff = (max - min) / 5;
+    
+    //0, 5, 10, 15, 20, 25
+    //0, 10, 20, 30, 40, 50
+    //0, 50, 100, 150, 200, 250
+    //0, 100, 200, 300, 400, 500
+    //0, 500, 1000, 1500, 2000, 2500
+    const int16_t rangeRef[] = {5, 10, 25, 50, 250, 500, 2500, 5000};
+    int16_t tick = 5;
+    for(int i = 0; i < __Sizeof(rangeRef); i++)
+    {
+        if(diff < rangeRef[i])
+        {
+            tick = rangeRef[i];
+            break;
+        }
+    }
+
+    min = min / tick * tick - tick;
+    
+    lv_coord_t tick_min = min;
+    lv_coord_t tick_max = min + 5 * tick;
+    lv_chart_set_range(chartAlt, tick_min, tick_max);
+    ChartAlt_AutoTickProcess(tick_min, tick_max);
 }
 
 /**
@@ -211,8 +233,8 @@ static void Task_ChartUpdate(lv_task_t * task)
     lv_label_set_text_fmt(labelKPa, "%0.2f", (float)BMP180.pressure / 1000.0f);
     lv_label_set_text_fmt(labelTemp, "%0.1fC"LV_SYMBOL_DEGREE_SIGN, BMP180.temperature);
     lv_label_set_text_fmt(labelAlt, BMP180.altitude > 0.0f ? "%+0.1fm" : "%0.1fm", BMP180.altitude);
-    lv_chart_set_next(chartAlt, serAlt, BMP180.altitude);
     ChartAlt_AutoRangeProcess();
+    lv_chart_set_next(chartAlt, serAlt, (int16_t)BMP180.altitude);
 }
 
 /**
@@ -220,7 +242,7 @@ static void Task_ChartUpdate(lv_task_t * task)
   * @param  无
   * @retval 无
   */
-static void ChartAlt_Creat()
+static void ChartAlt_Create()
 {
     chartAlt = lv_chart_create(appWindow , NULL);
     
@@ -254,7 +276,7 @@ static void ChartAlt_Creat()
     lv_chart_set_y_tick_texts(chartAlt, "m\n" "80\n" "60\n" "40\n" "20\n" "0", 2, LV_CHART_AXIS_DRAW_LAST_TICK);
 
     serAlt = lv_chart_add_series(chartAlt, LV_COLOR_WHITE);
-    lv_chart_init_points(chartAlt, serAlt, 0);
+    lv_chart_init_points(chartAlt, serAlt, (int16_t)BMP180.altitude);
     
     labelAlt = lv_label_create(appWindow, NULL);
     lv_label_set_style(labelAlt, LV_LABEL_STYLE_MAIN, &style_label_public);
@@ -316,10 +338,10 @@ static void Setup()
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
     
-    Title_Creat("Altitude");
-    ContKPaTemp_Creat();
-    LabelKPaTemp_Creat();
-    ChartAlt_Creat();
+    Title_Create("Altitude");
+    ContKPaTemp_Create();
+    LabelKPaTemp_Create();
+    ChartAlt_Create();
     
     taskChartUpdate = lv_task_create(Task_ChartUpdate, 1000, LV_TASK_PRIO_MID, NULL);
     Task_ChartUpdate(taskChartUpdate);

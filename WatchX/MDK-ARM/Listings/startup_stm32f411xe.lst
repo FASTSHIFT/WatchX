@@ -777,15 +777,16 @@ ARM Macro Assembler    Page 12
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=.\objects\startup_stm32f411xe.d -o.\objects\startup_stm32f411xe
-.o -I.\RTE\_WatchX -ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.5.1\CMSIS\Core\Include -ID
+.o -I.\RTE\_WatchX -ID:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\Core\Include -ID
 
 
 
 ARM Macro Assembler    Page 13 
 
 
-rivers\CMSIS\Device\ST\STM32F4xx\Include --predefine="__UVISION_VERSION SETA 52
-5" --predefine="_RTE_ SETA 1" --list=.\listings\startup_stm32f411xe.lst ..\Core
+:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\
+Include --predefine="__UVISION_VERSION SETA 525" --predefine="_RTE_ SETA 1" --p
+redefine="STM32F411xE SETA 1" --list=.\listings\startup_stm32f411xe.lst ..\Core
 \CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f411xe.s
 
 
@@ -1911,4 +1912,4 @@ m\startup_stm32f411xe.s
       None
 Comment: __use_two_region_memory unused
 3 symbols
-423 symbols in table
+424 symbols in table

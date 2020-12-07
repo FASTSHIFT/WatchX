@@ -1,5 +1,6 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
+#include "Basic/CommonMacro.h"
+#include "BSP/BSP.h"
 
 /*此页面窗口*/
 static lv_obj_t * appWindow;
@@ -31,7 +32,7 @@ static lv_obj_t * labelRecord_Grp[SW_RECORD_MAX];
   * @param  text:标题栏文本
   * @retval 无
   */
-static void Title_Creat(const char * text)
+static void Title_Create(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -63,7 +64,7 @@ static void Title_Creat(const char * text)
   * @param  无
   * @retval 无
   */
-static void LmeterSec_Creat()
+static void LmeterSec_Create()
 {
     static lv_style_t style_lmeter;
     style_lmeter = lv_style_pretty_color;
@@ -91,7 +92,7 @@ static void LmeterSec_Creat()
   * @param  无
   * @retval 无
   */
-static void LabelTime_Creat()
+static void LabelTime_Create()
 {
     LV_FONT_DECLARE(HandGotn_26);
     
@@ -133,7 +134,7 @@ static void LabelTime_Creat()
   * @param  无
   * @retval 无
   */
-static void ContRecord_Creat()
+static void ContRecord_Create()
 {
     contRecord = lv_cont_create(appWindow, NULL);
     lv_obj_set_size(contRecord, 128, 60);
@@ -172,7 +173,7 @@ static void ContRecord_Creat()
   * @param  无
   * @retval 无
   */
-static void LabelRecord_Creat()
+static void LabelRecord_Create()
 {
     LV_FONT_DECLARE(HandGotn_14);
     static lv_style_t style_label;
@@ -421,11 +422,11 @@ static void Setup()
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
     
-    Title_Creat("StopWatch");
-    LmeterSec_Creat();
-    LabelTime_Creat();
-    ContRecord_Creat();
-    LabelRecord_Creat();
+    Title_Create("StopWatch");
+    LmeterSec_Create();
+    LabelTime_Create();
+    ContRecord_Create();
+    LabelRecord_Create();
     SW_Init();
     PagePlayAnim(true);
 }

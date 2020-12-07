@@ -1,5 +1,6 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
+#include "Basic/CommonMacro.h"
+#include "BSP/BSP.h"
 
 /*RTC时间*/
 static RTC_TimeTypeDef RTC_Time;
@@ -48,7 +49,7 @@ static lv_task_t * taskTopBarUpdate;
   * @param  无
   * @retval 无
   */
-static void ImgBg_Creat()
+static void ImgBg_Create()
 {
     LV_IMG_DECLARE(ImgBg);
     imgBg = lv_img_create(appWindow, NULL);
@@ -108,7 +109,7 @@ static void Task_TopBarUpdate(lv_task_t * task)
   * @param  无
   * @retval 无
   */
-static void LabelTopBar_Creat()
+static void LabelTopBar_Create()
 {
     LV_FONT_DECLARE(HandGotn_14);
     labelBMP = lv_label_create(appWindow, NULL);
@@ -228,7 +229,7 @@ static void Task_TimeUpdate(lv_task_t * task)
   * @param  无
   * @retval 无
   */
-static void LabelDate_Creat()
+static void LabelDate_Create()
 {
     LV_FONT_DECLARE(Morganite_36);
     labelDate = lv_label_create(appWindow, NULL);
@@ -250,9 +251,9 @@ static void LabelDate_Creat()
   * @param  无
   * @retval 无
   */
-static void LabelTime_Creat()
+static void LabelTime_Create()
 {
-    LabelDate_Creat();
+    LabelDate_Create();
     
     /*contTime*/
     contTime = lv_cont_create(appWindow, NULL);
@@ -311,7 +312,7 @@ static void LabelTime_Creat()
   * @param  无
   * @retval 无
   */
-static void LabelStep_Creat()
+static void LabelStep_Create()
 {
     LV_IMG_DECLARE(ImgRun);
     imgRun = lv_img_create(appWindow, NULL);
@@ -345,10 +346,10 @@ static void Setup()
     /*将此页面移到前台*/
     lv_obj_move_foreground(appWindow);
     
-    ImgBg_Creat();
-    LabelTopBar_Creat();
-    LabelTime_Creat();
-    LabelStep_Creat();
+    ImgBg_Create();
+    LabelTopBar_Create();
+    LabelTime_Create();
+    LabelStep_Create();
     
     Power_SetAutoLowPowerEnable(true);
 }

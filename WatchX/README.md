@@ -43,8 +43,16 @@
 
 ## [v0.9] - 2020-07-30
 * 1.更新MillisTaskManager库，无需手动指定ID
-* 2.TFT_BLK_Pin 更名为 TFT_BLK_Pin
+* 2.TFT_LED_Pin 更名为 TFT_BLK_Pin
 * 3.添加部分注释
-* 4.Home更名为DiolPlate(表盘)页面，Settings更名为MainMenu页面
+* 4.Home更名为DialPlate(表盘)页面，Settings更名为MainMenu页面
 * 5.更新PageManager v1.4
 * 6.添加Arduboy2
+
+## [v1.0] - 2020-12-07
+* 1.POWER初始化整合
+* 2.修改默认的动画曲线，更强的非线性效果，lv_anim_path_ease_in_out -> lv_anim_path_ease_out
+* 3.修正错误的单词拼写，xxx_Creat -> xxx_Create， Fouce -> Focus
+* 4.加大lv_disp_buf，使用两个半屏buffer，提升刷新率
+* 5.去除FileGroup.h
+* 6.更新海拔显示的tick自适应方法

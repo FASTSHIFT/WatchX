@@ -1,4 +1,4 @@
-#include "FileGroup.h"
+#include "BSP/BSP.h"
 #include "GUI/DisplayPrivate.h"
 #include "MillisTaskManager/MillisTaskManager.h"
 
@@ -25,33 +25,19 @@ static void CPU_UsageUpdate()
   */
 static void setup()
 {
-    /*LED*/
-    pinMode(LED_Pin, OUTPUT);
-    digitalWrite(LED_Pin, HIGH);
-    
-    /*电源保持*/
-    pinMode(POWER_ON_Pin, OUTPUT);
-    digitalWrite(POWER_ON_Pin, HIGH);
-    
-    /*电源按键*/
-    pinMode(POWER_EN_Pin, INPUT);
-    
-    /*电池充电检测*/
-    pinMode(BAT_CHG_Pin, INPUT_PULLUP);
+    LED_Init();
+    LED_SetEnable(true);
 
     /*设备初始化*/
-    RTCx_Init();
     Power_Init();
+    RTCx_Init();
     Backlight_Init();
     Button_Init();
     Display_Init();
     BMP_Init();
-    
-    /*电池电压检测*/
-    pinMode(BAT_DET_Pin, INPUT_ANALOG_DMA);
     ADC_DMA_Init();
 
-    digitalWrite(LED_Pin, LOW);
+    LED_SetEnable(false);
 
     /*任务注册*/
     mtmMain.Register(Display_Update, 1);                //屏幕刷新

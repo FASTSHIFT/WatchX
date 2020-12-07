@@ -1,5 +1,6 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
+#include "Basic/CommonMacro.h"
+#include "BSP/BSP.h"
 
 /*此页面窗口*/
 static lv_obj_t * appWindow;
@@ -87,7 +88,7 @@ static void BrightCtrl(int8_t dir)
   * @param  text:标题栏文本
   * @retval 无
   */
-static void Title_Creat(const char * text)
+static void Title_Create(const char * text)
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -119,7 +120,7 @@ static void Title_Creat(const char * text)
   * @param  无
   * @retval 无
   */
-static void Bright_Creat()
+static void Bright_Create()
 {
     static lv_style_t style_arc;
     style_arc = lv_style_plain;
@@ -154,7 +155,7 @@ static void Bright_Creat()
   * @param  无
   * @retval 无
   */
-static void LabelTime_Creat()
+static void LabelTime_Create()
 {
     LV_FONT_DECLARE(HandGotn_20);
     
@@ -241,9 +242,9 @@ static void Setup()
     
     ArcNowAngle = 0;
     
-    Title_Creat("Backlight");
-    Bright_Creat();
-    LabelTime_Creat();
+    Title_Create("Backlight");
+    Bright_Create();
+    LabelTime_Create();
 
     BrightCtrl(0);
     PagePlayAnim(true);

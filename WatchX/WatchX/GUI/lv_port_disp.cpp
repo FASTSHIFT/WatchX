@@ -4,21 +4,10 @@
 /*屏幕驱动结构体地址*/
 static lv_disp_drv_t * disp_drv_p;
 
-/*屏幕缓冲区信息*/
-static lv_disp_buf_t disp_buf;
-
 /*乒乓缓冲区，缓冲20行像素*/
-static lv_color_t lv_disp_buf1[LV_HOR_RES_MAX * 20];
-static lv_color_t lv_disp_buf2[LV_HOR_RES_MAX * 20];
-
-#if LV_USE_LOG != 0
-/* Serial debugging */
-static void log_print(lv_log_level_t level, const char * file, uint32_t line, const char * dsc)
-{
-    Serial.printf("%s@%d->%s\r\n", file, line, dsc);
-    delay(100);
-}
-#endif
+#define DISP_BUF_SIZE        (LV_HOR_RES_MAX * LV_VER_RES_MAX / 2)
+static lv_color_t lv_disp_buf1[DISP_BUF_SIZE];
+static lv_color_t lv_disp_buf2[DISP_BUF_SIZE];
 
 /**
   * @brief  使用DMA发送缓冲区数据
@@ -28,10 +17,10 @@ static void log_print(lv_log_level_t level, const char * file, uint32_t line, co
   */
 static void disp_spi_dma_send(void* buf, uint32_t size)
 {
-    DMA_Cmd(DMA2_Stream3, DISABLE);                      //关闭DMA传输
+    DMA_Cmd(DMA2_Stream3, DISABLE);
     DMA2_Stream3->M0AR = (uint32_t)buf;
     DMA2_Stream3->NDTR = size;
-    DMA_Cmd(DMA2_Stream3, ENABLE);                      //开启DMA传输
+    DMA_Cmd(DMA2_Stream3, ENABLE);
     
 //    while(DMA_GetFlagStatus(DMA2_Stream3,DMA_FLAG_TCIF3) == RESET){} //等待DMA传输完成
 //    DMA_ClearFlag(DMA2_Stream3, DMA_FLAG_TCIF3); // 清除标志
@@ -52,7 +41,7 @@ static void disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *c
     
     int16_t w = (area->x2 - area->x1 + 1);
     int16_t h = (area->y2 - area->y1 + 1);
-    uint32_t size = w * h * 2;
+    uint32_t size = w * h * sizeof(lv_color_t);
     
     /*设置刷新区域*/
     screen.setAddrWindow(area->x1, area->y1, area->x2, area->y2);
@@ -86,7 +75,7 @@ void DMA2_Stream3_IRQHandler(void)
   * @param  无
   * @retval 无
   */
-static void lv_disp_spi_dma_init()
+static void disp_spi_dma_init()
 {
     DMA_InitTypeDef  DMA_InitStructure;
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE); //DMA2时钟使能
@@ -124,15 +113,10 @@ static void lv_disp_spi_dma_init()
   */
 void lv_port_disp_init()
 {
-    lv_init();
+    disp_spi_dma_init();
 
-    lv_disp_spi_dma_init();
-
-#if LV_USE_LOG != 0
-    lv_log_register_print(log_print); /* register print function for debugging */
-#endif
-
-    lv_disp_buf_init(&disp_buf, lv_disp_buf1, lv_disp_buf2, sizeof(lv_disp_buf1) / sizeof(lv_color_t));
+    static lv_disp_buf_t disp_buf;
+    lv_disp_buf_init(&disp_buf, lv_disp_buf1, lv_disp_buf2, DISP_BUF_SIZE);
 
     /*Initialize the display*/
     lv_disp_drv_t disp_drv;

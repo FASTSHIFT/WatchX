@@ -1,6 +1,7 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
 #include "Time/Time.h"
+#include "Basic/CommonMacro.h"
+#include "BSP/BSP.h"
 
 static RTC_TimeTypeDef RTC_Time;
 static RTC_DateTypeDef RTC_Date;
@@ -53,7 +54,7 @@ static void TitleUpdate()
     lv_label_set_static_text(labelTitle, text);
 }
 
-static void Title_Creat()
+static void Title_Create()
 {
     LV_FONT_DECLARE(HandGotn_20);
     labelTitle = lv_label_create(appWindow, NULL);
@@ -80,7 +81,7 @@ static void Title_Creat()
     lv_obj_align(lineTitle, labelTitle, LV_ALIGN_OUT_BOTTOM_MID, 0, 2);
 }
 
-static void ContTimeDate_Creat()
+static void ContTimeDate_Create()
 {
     contTime = lv_cont_create(appWindow, NULL);
     lv_obj_set_size(contTime, 128, 42);
@@ -162,7 +163,7 @@ static void LabelDateUpdate(uint8_t highLight = 0)
     LabelWeekUpdate();
 }
 
-static void LabelTimeDate_Creat()
+static void LabelTimeDate_Create()
 {
     /*Ê±¼ä*/
     RTC_GetTime(RTC_Format_BIN, &RTC_Time);
@@ -287,7 +288,7 @@ static void PagePlayAnim(bool down)
     }
 }
 
-static void ContAnim_Creat()
+static void ContAnim_Create()
 {
     contTimeAnim = lv_cont_create(contTime, contTime);
     lv_obj_set_size(contTimeAnim, lv_obj_get_width(contTime), lv_obj_get_height(contTime));
@@ -319,11 +320,11 @@ static void Setup()
     CfgSelIndex = 0;
     CfgChanged = false;
     
-    Title_Creat();
-    ContTimeDate_Creat();
-    LabelTimeDate_Creat();
+    Title_Create();
+    ContTimeDate_Create();
+    LabelTimeDate_Create();
     
-    ContAnim_Creat();
+    ContAnim_Create();
     PagePlayAnim(true);
 }
 

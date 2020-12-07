@@ -374,6 +374,7 @@ while(0)
     TIM_DeInit(TIMx);
     Timer_ClockCmd(TIMx, ENABLE);
 
+    TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
     TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseStructure.TIM_Period = period - 1;         //设置在下一个更新事件装入活动的自动重装载寄存器周期的值
     TIM_TimeBaseStructure.TIM_Prescaler = prescaler - 1;  //设置用来作为TIMx时钟频率除数的预分频值  10Khz的计数频率

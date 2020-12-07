@@ -57,7 +57,7 @@ static void Event(void* btn, int event)
   * @param  pageID:为此页面分配的ID号
   * @retval 无
   */
-void PageRegister_Home(uint8_t pageID)
+void PageRegister_EXAMPLE(uint8_t pageID)
 {
     /*获取分配给此页面的窗口*/
     appWindow = AppWindow_GetCont(pageID);

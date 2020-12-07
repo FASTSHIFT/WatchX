@@ -1,6 +1,5 @@
 #include "GUI/DisplayPrivate.h"
 #include "cm_backtrace/cm_backtrace.h"
-#include "Basic/FileGroup.h"
 #include "BSP/BSP.h"
 #include "SoftSerial/SoftSerial.h"
 

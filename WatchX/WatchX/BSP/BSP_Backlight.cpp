@@ -1,5 +1,5 @@
-#include "Basic/FileGroup.h"
 #include "GUI/DisplayPrivate.h"
+#include "Basic/CommonMacro.h"
 #include "BSP.h"
 #include "rtc.h"
 

@@ -66,7 +66,7 @@ void lv_obj_add_anim(
     int32_t start, int32_t end,
     uint16_t time = LV_ANIM_TIME_DEFAULT,
     lv_anim_ready_cb_t ready_cb = NULL,
-    lv_anim_path_cb_t path_cb = lv_anim_path_ease_in_out
+    lv_anim_path_cb_t path_cb = lv_anim_path_ease_out
 );
 #define LV_OBJ_ADD_ANIM(obj,attr,target,time)\
 do{\
@@ -81,7 +81,7 @@ do{\
 }while(0)
 
 /*AppWindow*/
-void AppWindow_Creat();
+void AppWindow_Create();
 lv_obj_t * AppWindow_GetCont(uint8_t pageID);
 lv_coord_t AppWindow_GetHeight();
 lv_coord_t AppWindow_GetWidth();
